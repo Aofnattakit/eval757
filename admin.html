@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แอดมิน · แบบประเมินรายวิชา</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{var _t=JSON.parse(localStorage.getItem("ev_theme"));if(_t)document.documentElement.dataset.theme=_t}catch(e){}</script>
+
+<script src="qrcode.js"></script>
+<style>
+  body { font-size: 15px; }
+  .hidden { display: none !important; }
+  .login { max-width: 380px; margin: 12vh auto; padding: 28px; }
+  .login h1 { font-size: 22px; }
+
+  .appbar { background: var(--card); border-bottom: 1px solid var(--line); border-top: 3px solid var(--cross); position: sticky; top: 0; z-index: 20; }
+  .appbar .in { max-width: 1240px; margin: 0 auto; padding: 12px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+  .brand .dot { width: 34px; height: 34px; border-radius: 10px; background: var(--head); color: #fff; display: grid; place-items: center; font-family: Prompt; font-weight: 700; flex: none; }
+  .brand .t { font-family: Prompt; font-weight: 600; line-height: 1.25; }
+  .brand .s { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tabs { display: flex; gap: 4px; background: var(--line-2); padding: 4px; border-radius: 12px; overflow-x: auto; }
+  .tabs button { border: 0; background: transparent; padding: 8px 14px; border-radius: 9px; font-weight: 500; white-space: nowrap; color: var(--muted); }
+  .tabs button.on { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+  .live { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .live .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .live.on .pulse { background: var(--good); animation: pl 1.6s infinite; }
+  @keyframes pl { 0% { box-shadow: 0 0 0 0 rgba(29,122,88,.5); } 100% { box-shadow: 0 0 0 9px rgba(29,122,88,0); } }
+
+  .page { max-width: 1240px; margin: 0 auto; padding: 20px 18px 60px; }
+  .grid { display: grid; gap: 16px; }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g2 { grid-template-columns: 1.25fr 1fr; }
+  .g2e { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 900px) { .g4 { grid-template-columns: repeat(2, 1fr); } .g2, .g2e { grid-template-columns: 1fr; } }
+  .box { padding: 18px 20px; }
+  .box h3 { font-size: 16px; margin-bottom: 4px; }
+  .box .hint { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .kpi .lab { font-size: 13px; color: var(--muted); }
+  .kpi .val { font-family: Prompt; font-size: 32px; font-weight: 600; line-height: 1.15; margin-top: 4px; }
+  .kpi .val small { font-size: 15px; color: var(--muted); font-weight: 500; }
+  .kpi .foot { font-size: 13px; margin-top: 4px; }
+  .lvl { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .lvl.l5 { background: #dff1e8; color: #13573f; } .lvl.l4 { background: #e9f4ee; color: #2f7553; }
+  .lvl.l3 { background: #f2ece7; color: #6b5d55; } .lvl.l2 { background: #fbe7df; color: #9b4b2f; } .lvl.l1 { background: #f8dcd7; color: #8f2a1a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lvl { filter: brightness(.85) saturate(.9); } }
+
+  /* insights */
+  .ins { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .ins li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: var(--line-2); }
+  .ins .ic { flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; font-size: 15px; background: var(--card); }
+  .ins b { font-weight: 600; }
+
+  /* bars */
+  .hbar { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 70px; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .hbar:last-child { border-bottom: 0; }
+  .hbar .nm { font-size: 14px; line-height: 1.3; overflow: hidden; }
+  .hbar .nm small { color: var(--muted); display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .track { position: relative; height: 22px; background: var(--line-2); border-radius: 6px; }
+  .track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--primary); transition: width .5s; }
+  .track .ref { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; }
+  .hbar .num { font-family: Prompt; font-weight: 600; text-align: right; }
+  .hbar .num small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); font-family: 'IBM Plex Sans Thai'; }
+  .hbar.clickable { cursor: pointer; } .hbar.clickable:hover .nm { color: var(--primary); }
+  .axis { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 70px; gap: 10px; font-size: 11px; color: var(--muted); }
+  .axis .tk { display: flex; justify-content: space-between; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+  /* heatmap */
+  .heat { width: 100%; border-collapse: separate; border-spacing: 3px; font-size: 13px; }
+  .heat th { font-weight: 500; color: var(--muted); font-size: 12px; text-align: center; padding: 4px; }
+  .heat th.rowh { text-align: left; color: var(--ink); font-size: 13px; max-width: 220px; }
+  .heat td { text-align: center; padding: 9px 4px; border-radius: 7px; font-family: Prompt; font-weight: 600; min-width: 60px; }
+  .scrollx { overflow-x: auto; }
+
+  /* stacked dist */
+  .dist { display: flex; height: 20px; border-radius: 5px; overflow: hidden; background: var(--line-2); min-width: 120px; }
+  .dist span { display: block; height: 100%; }
+
+  /* table */
+  table.t { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.t th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 8px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
+  table.t td.n { font-family: Prompt; font-weight: 600; text-align: right; white-space: nowrap; }
+  table.t th.n { text-align: right; }
+  table.t tr.sec td { background: var(--line-2); font-weight: 600; font-size: 13px; }
+  table.t tr.tot td { font-weight: 600; border-top: 2px solid var(--line); }
+  .diff { font-size: 12px; font-weight: 500; font-family: 'IBM Plex Sans Thai'; }
+  .diff.up { color: var(--good); } .diff.dn { color: var(--s1); }
+
+  /* subject picker */
+  .picker { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .picker select { max-width: 520px; }
+  .subjhead { padding: 22px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
+  .subjhead h2 { font-size: 22px; }
+  .bigscore { text-align: center; }
+  .bigscore .v { font-family: Prompt; font-size: 44px; font-weight: 700; line-height: 1; color: var(--primary); }
+  .comments { display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+  .comments div { padding: 10px 12px; border-radius: 10px; background: var(--line-2); font-size: 14px; }
+
+  /* control */
+  .ctl { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 4px; border-bottom: 1px solid var(--line-2); }
+  .ctl:last-child { border-bottom: 0; }
+  .ctl .nm { font-weight: 500; }
+  .ctl .meta { font-size: 13px; color: var(--muted); }
+  .switch { position: relative; width: 52px; height: 30px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch span { position: absolute; inset: 0; background: var(--line); border-radius: 99px; transition: .2s; cursor: pointer; }
+  .switch span::before { content: ""; position: absolute; width: 24px; height: 24px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .switch input:checked + span { background: var(--good); }
+  .switch input:checked + span::before { transform: translateX(22px); }
+  .dayhead { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding: 6px 4px; border-bottom: 2px solid var(--line); }
+  .dayhead h4 { font-size: 15px; }
+  .qrbox { text-align: center; }
+  .qrbox #qr { display: inline-block; padding: 12px; background: #fff; border-radius: 12px; }
+  .qrbox #qr img, .qrbox #qr canvas { display: block; }
+  .bigcode { font-family: Prompt; font-size: 34px; font-weight: 700; letter-spacing: .15em; color: var(--primary); }
+  .urlline { font-size: 13px; word-break: break-all; color: var(--muted); }
+
+  .qrfull { position: fixed; inset: 0; background: #fff; border-top: 8px solid #c8102e; color: #1f1a1b; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px; }
+  .qrfull h2 { font-size: clamp(22px, 3.4vw, 40px); color: #1b2f57; }
+  .qrfull .sub { font-size: clamp(15px, 1.8vw, 22px); max-width: 1000px; }
+  .qrfull .code { font-family: Prompt; font-weight: 700; font-size: clamp(30px, 5vw, 64px); letter-spacing: .2em; color: #1b2f57; }
+  .qrfull .close { position: absolute; top: 16px; right: 16px; }
+  .empty { text-align: center; padding: 30px; color: var(--muted); }
+
+  /* print */
+  /* จัดการข้อมูล */
+  .mrow { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--line-2); }
+  .mrow:last-child { border-bottom: 0; }
+  .mrow .ord { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .mrow .ord b { font-family: Prompt; font-size: 15px; }
+  .mrow .ord button, .mrow .del { border: 1px solid var(--line); background: var(--card); border-radius: 8px; width: 30px; height: 26px; line-height: 1; color: var(--muted); padding: 0; }
+  .mrow .ord button:hover:not(:disabled), .mrow .del:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+  .mrow .ord button:disabled, .mrow .del:disabled { opacity: .35; cursor: not-allowed; }
+  .mrow .del { width: 34px; height: 34px; font-size: 16px; }
+  .mrow .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; min-width: 0; }
+  .mrow .fields .full { grid-column: 1 / -1; }
+  .mrow input { width: 100%; padding: 8px 10px; border-radius: 9px; font-size: 14px; border: 1px solid var(--line); background: var(--card); outline: none; }
+  .mrow input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .mrow .info { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+  .mrow.new input { border-color: var(--s4); }
+  @media (max-width: 520px) { .mrow .fields { grid-template-columns: 1fr; } }
+  .cfg { display: grid; gap: 6px; }
+  .cfg label { font-size: 13px; font-weight: 500; margin-top: 6px; }
+  .cfg textarea { min-height: 0; resize: vertical; }
+  .tag.dirty { background: #fff1d6; color: #8a5a00; }
+
+  #printArea { display: none; }
+  @media print {
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block; font-family: 'Sarabun', 'IBM Plex Sans Thai', sans-serif; color: #000; font-size: 15px; }
+    #printArea h2 { text-align: center; font-size: 18px; }
+    #printArea .c { text-align: center; }
+    #printArea table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    #printArea th, #printArea td { border: 1px solid #000; padding: 4px 6px; }
+    #printArea th { background: #eee; }
+    #printArea td.n { text-align: center; }
+    #printArea .pb { page-break-after: always; }
+    @page { size: A4; margin: 18mm 16mm; }
+  }
+</style>
+</head>
+<body>
+<div id="demo" class="demo-banner hidden">โหมดตัวอย่าง — ข้อมูลจำลอง · รหัสผ่าน admin757 · <a href="index.html" style="color:inherit;font-weight:600">← หน้าผู้ประเมิน</a></div>
+
+<!-- เข้าสู่ระบบ -->
+<div id="vLogin" class="card login">
+  <div class="brand" style="margin-bottom:18px"><div class="dot">ป</div><div><div class="t">ผู้ดูแลระบบ</div><div class="s">แบบประเมินรายวิชา</div></div></div>
+  <label class="muted" style="font-size:14px">รหัสผ่านแอดมิน</label>
+  <input type="password" id="pw" style="margin-top:6px" autocomplete="current-password">
+  <button class="btn block" id="loginBtn" style="margin-top:14px">เข้าสู่ระบบ</button>
+  <p class="muted" style="font-size:12px;margin-top:14px">รหัสผ่านตั้งในชีต “ตั้งค่า” แถว adminPassword</p>
+</div>
+
+<!-- แอป -->
+<div id="vApp" class="hidden">
+  <div class="appbar"><div class="in">
+    <div class="brand"><div class="dot">ป</div><div style="min-width:0"><div class="t" id="hTitle">แบบประเมินรายวิชา</div><div class="s" id="hSub"></div></div></div>
+    <nav class="tabs" id="tabs">
+      <button data-t="overview" class="on">ภาพรวม</button>
+      <button data-t="subject">รายวิชา</button>
+      <button data-t="control">เปิด-ปิดประเมิน</button>
+      <button data-t="manage">จัดการข้อมูล</button>
+      <button data-t="export">ส่งออก</button>
+    </nav>
+    <div class="live" id="live" title="อัปเดตอัตโนมัติทุก 30 วินาที"><span class="pulse"></span><span id="liveTxt">—</span>
+      <button class="btn ghost sm" id="reloadBtn" title="โหลดข้อมูลใหม่">↻</button><button class="btn ghost sm" id="themeBtn" style="min-width:36px">☾</button></div>
+  </div></div>
+
+  <div class="page">
+    <!-- ภาพรวม -->
+    <section id="tOverview">
+      <div class="grid g4" id="kpis"></div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card box">
+          <h3>ข้อค้นพบสำคัญ</h3>
+          <div class="hint">สรุปอัตโนมัติจากข้อมูลล่าสุด</div>
+          <ul class="ins" id="insights"></ul>
+        </div>
+        <div class="card box">
+          <h3>ค่าเฉลี่ยรายด้าน</h3>
+          <div class="hint">รวมทุกวิชา · เส้นตั้ง = ค่าเฉลี่ยรวม</div>
+          <div id="secBars"></div>
+          <h3 style="margin-top:22px">การกระจายคำตอบทั้งหมด</h3>
+          <div class="hint">สัดส่วนระดับคะแนน 5 → 1</div>
+          <div id="allDist"></div>
+        </div>
+      </div>
+      <div class="card box" style="margin-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+          <div><h3>เปรียบเทียบรายวิชา</h3><div class="hint">คลิกชื่อวิชาเพื่อดูรายละเอียด · เส้นตั้ง = ค่าเฉลี่ยรวม</div></div>
+          <div class="tabs" id="sortTabs"><button data-s="mean" class="on">เรียงตามคะแนน</button><button data-s="order">เรียงตามตาราง</button><button data-s="n">จำนวนผู้ตอบ</button></div>
+        </div>
+        <div id="subjBars"></div>
+      </div>
+      <div class="card box" style="margin-top:16px">
+        <h3>แผนที่ความร้อน วิชา × ด้าน</h3>
+        <div class="hint">สีเขียวเข้ม = สูง · สีส้มแดง = ควรพัฒนา (เทียบเกณฑ์ 3.50–5.00)</div>
+        <div class="scrollx"><table class="heat" id="heat"></table></div>
+      </div>
+      <div class="grid g2e" style="margin-top:16px">
+        <div class="card box"><h3>ข้อคำถามที่ได้คะแนนสูงสุด / ต่ำสุด</h3><div class="hint">รวมทุกวิชา</div><div id="itemRank"></div></div>
+        <div class="card box"><h3>เปรียบเทียบรายวิทยากร</h3><div class="hint">รวมทุกวิชาที่วิทยากรสอน</div><div id="instBars"></div></div>
+      </div>
+    </section>
+
+    <!-- รายวิชา -->
+    <section id="tSubject" class="hidden">
+      <div class="picker">
+        <select id="subjSel"></select>
+        <button class="btn ghost sm" id="prevS">‹ ก่อนหน้า</button>
+        <button class="btn ghost sm" id="nextS">ถัดไป ›</button>
+        <button class="btn sm" id="printS" style="margin-left:auto">พิมพ์รายงานวิชานี้</button>
+      </div>
+      <div id="subjView"></div>
+    </section>
+
+    <!-- เปิดปิด -->
+    <section id="tControl" class="hidden">
+      <div class="grid g2">
+        <div class="card box">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+            <div><h3>เปิด-ปิดการประเมิน</h3><div class="hint" style="margin:0">ผู้ประเมินจะเห็นเฉพาะวิชาที่เปิด · มีผลทันที</div></div>
+            <div style="display:flex;gap:8px"><button class="btn ghost sm" id="allOn">เปิดทั้งหมด</button><button class="btn ghost sm" id="allOff">ปิดทั้งหมด</button></div>
+          </div>
+          <div id="ctlList"></div>
+        </div>
+        <div>
+          <div class="card box qrbox">
+            <h3>ลิงก์สำหรับผู้ประเมิน</h3>
+            <div class="hint">ให้ผู้เข้าอบรมสแกน QR แล้วกรอกรหัส</div>
+            <div id="qr"></div>
+            <div id="codeWrap"><div style="margin-top:12px" class="muted">รหัสเข้าร่วม</div>
+            <div class="bigcode" id="codeShow">—</div></div>
+            <div id="noCode" class="muted" style="margin-top:12px;font-size:14px">สแกนแล้วเข้าประเมินได้ทันที ไม่ต้องใช้รหัส</div>
+            <div class="urlline" id="urlShow"></div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+              <button class="btn sm" id="qrFull">แสดง QR เต็มจอ</button>
+              <button class="btn ghost sm" id="copyUrl">คัดลอกลิงก์</button>
+            </div>
+          </div>
+          <div class="card box" style="margin-top:16px">
+            <h3>แก้ไขรายวิชาและการตั้งค่า</h3>
+            <div class="hint" style="margin-bottom:10px">ชื่อวิชา วิทยากร วัน เวลา รหัสเข้าร่วม และจำนวนผู้เข้าอบรม แก้ได้ในแท็บจัดการข้อมูล · ข้อคำถามแก้ใน Google Sheet</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" id="goManage">ไปที่จัดการข้อมูล</button><a class="btn ghost sm" id="sheetLink" target="_blank" rel="noopener">เปิด Google Sheet</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- จัดการข้อมูล -->
+    <section id="tManage" class="hidden">
+      <div class="grid g2">
+        <div class="card box">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+            <div><h3>รายวิชา</h3><div class="hint" style="margin:0">แก้แล้วกดบันทึก · ลบได้เฉพาะวิชาที่ยังไม่มีผู้ประเมิน</div></div>
+            <span class="tag" id="mgStatus">บันทึกแล้ว</span>
+          </div>
+          <div id="mgList" style="margin-top:12px"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn ghost sm" id="mgAdd">+ เพิ่มวิชา</button>
+            <span style="flex:1"></span>
+            <button class="btn ghost sm" id="mgCancel">ยกเลิกการแก้ไข</button>
+            <button class="btn sm" id="mgSave">บันทึกรายวิชา</button>
+          </div>
+        </div>
+        <div class="card box">
+          <h3>ตั้งค่าแบบประเมิน</h3>
+          <div class="hint">แสดงบนหน้าผู้ประเมินทันทีหลังบันทึก</div>
+          <div class="cfg">
+            <label for="cfgCode">รหัสเข้าร่วม <span class="muted">(เว้นว่าง = สแกนแล้วประเมินได้เลย)</span></label>
+            <input type="text" id="cfgCode" maxlength="12" autocomplete="off" placeholder="ไม่ใช้รหัส">
+            <label for="cfgPart">จำนวนผู้เข้าอบรม <span class="muted">(ใช้คำนวณร้อยละการตอบกลับ)</span></label>
+            <input type="number" id="cfgPart" min="0">
+            <label for="cfgTitle">ชื่อแบบประเมิน</label>
+            <input type="text" id="cfgTitle">
+            <label for="cfgSub">ชื่อโครงการ / รุ่น</label>
+            <textarea id="cfgSub" rows="2"></textarea>
+            <label for="cfgDetail">วันและสถานที่</label>
+            <textarea id="cfgDetail" rows="2"></textarea>
+            <label for="cfgInstr">คำชี้แจง / เกณฑ์</label>
+            <textarea id="cfgInstr" rows="2"></textarea>
+            <label for="cfgThanks">ข้อความหลังส่งแบบประเมิน</label>
+            <input type="text" id="cfgThanks">
+            <label for="cfgPw">เปลี่ยนรหัสผ่านแอดมิน <span class="muted">(เว้นว่าง = ใช้รหัสเดิม)</span></label>
+            <input type="password" id="cfgPw" autocomplete="new-password">
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;align-items:center">
+            <span class="tag" id="cfgStatus">บันทึกแล้ว</span>
+            <button class="btn sm" id="cfgSave">บันทึกการตั้งค่า</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ส่งออก -->
+    <section id="tExport" class="hidden">
+      <div class="grid g2e">
+        <div class="card box">
+          <h3>ไฟล์ CSV (เปิดใน Excel ได้)</h3>
+          <div class="hint">ภาษาไทยแสดงถูกต้องใน Excel</div>
+          <div style="display:grid;gap:10px">
+            <button class="btn ghost" id="csvSum">สรุปผลรายวิชา (x̄, S.D., ระดับ, รายด้าน)</button>
+            <button class="btn ghost" id="csvItem">สรุปรายข้อของทุกวิชา</button>
+            <button class="btn ghost" id="csvRaw">ข้อมูลดิบทั้งหมด</button>
+            <button class="btn ghost" id="csvText">ข้อเสนอแนะทั้งหมด</button>
+          </div>
+        </div>
+        <div class="card box">
+          <h3>รายงานสำหรับพิมพ์</h3>
+          <div class="hint">ตารางแบบรายงานผลการประเมิน (x̄, S.D., ระดับ) ขนาด A4</div>
+          <div style="display:grid;gap:10px">
+            <button class="btn" id="printAll">พิมพ์รายงานสรุปภาพรวม + ทุกรายวิชา</button>
+            <button class="btn ghost" id="printOverview">พิมพ์เฉพาะสรุปภาพรวม</button>
+          </div>
+          <p class="muted" style="font-size:13px;margin-top:14px">เกณฑ์แปลความหมาย: 4.51–5.00 มากที่สุด · 3.51–4.50 มาก · 2.51–3.50 ปานกลาง · 1.51–2.50 น้อย · 1.00–1.50 น้อยที่สุด</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="qrFullView" class="qrfull hidden">
+  <button class="btn ghost close" id="qrClose">ปิด ✕</button>
+  <h2 id="qfTitle"></h2>
+  <div class="sub" id="qfSub"></div>
+  <div id="qrBig" style="padding:14px;background:#fff"></div>
+  <div style="font-size:clamp(15px,1.8vw,22px)">สแกนแล้วกรอกรหัส</div>
+  <div class="code" id="qfCode"></div>
+</div>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { call, esc, DEMO, isDark, themeButton } = window.EvalCommon;
+  const $ = id => document.getElementById(id);
+  let pw = '';
+  try { pw = sessionStorage.getItem('ev_admin') || ''; } catch (e) {}
+  let D = null, S = null, curSubj = null, sortMode = 'mean', timer = null, lastOk = 0;
+
+  if (DEMO) $('demo').classList.remove('hidden');
+
+  let toastT;
+  function toast(m, err) { const t = $('toast'); t.textContent = m; t.className = 'toast show' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast', 2600); }
+
+  /* ---------- สถิติ ---------- */
+  const f2 = x => (x == null || isNaN(x)) ? '–' : x.toFixed(2);
+  function level(m) {
+    if (m == null || isNaN(m)) return { t: '–', c: '' };
+    if (m >= 4.505) return { t: 'มากที่สุด', c: 'l5' };
+    if (m >= 3.505) return { t: 'มาก', c: 'l4' };
+    if (m >= 2.505) return { t: 'ปานกลาง', c: 'l3' };
+    if (m >= 1.505) return { t: 'น้อย', c: 'l2' };
+    return { t: 'น้อยที่สุด', c: 'l1' };
+  }
+  const lvlTag = m => { const l = level(m); return l.c ? '<span class="lvl ' + l.c + '">' + l.t + '</span>' : '<span class="muted">–</span>'; };
+  function acc() { return { n: 0, s: 0, s2: 0, d: [0, 0, 0, 0, 0] }; }
+  function add(a, v) { a.n++; a.s += v; a.s2 += v * v; a.d[v - 1]++; }
+  function fin(a) { a.mean = a.n ? a.s / a.n : null; a.sd = a.n > 1 ? Math.sqrt(Math.max(0, (a.s2 - a.s * a.s / a.n) / (a.n - 1))) : (a.n ? 0 : null); return a; }
+
+  function compute() {
+    const qs = D.questions.filter(q => q.type === 'scale');
+    const sections = [...new Set(qs.map(q => q.section))];
+    const subjIds = new Set(D.subjects.map(s => s.id));
+    const all = acc(), bySec = {}, byItem = {}, bySubj = {}, byInst = {};
+    sections.forEach(s => bySec[s] = acc());
+    qs.forEach(q => byItem[q.id] = acc());
+    D.subjects.forEach(s => {
+      bySubj[s.id] = { subj: s, all: acc(), sec: {}, item: {}, resp: 0, texts: {}, choices: {}, rmeans: [] };
+      sections.forEach(x => bySubj[s.id].sec[x] = acc());
+      qs.forEach(q => bySubj[s.id].item[q.id] = acc());
+    });
+    D.responses.forEach(r => {
+      const B = bySubj[r.s]; if (!B) return;
+      B.resp++;
+      let rs = 0, rn = 0;
+      D.questions.forEach(q => {
+        const v = r.a[q.id];
+        if (q.type === 'scale') {
+          const n = Number(v); if (!(n >= 1 && n <= 5)) return;
+          add(all, n); add(bySec[q.section], n); add(byItem[q.id], n);
+          add(B.all, n); add(B.sec[q.section], n); add(B.item[q.id], n);
+          rs += n; rn++;
+        } else if (q.type === 'text') {
+          const t = String(v || '').trim(); if (!t) return;
+          (B.texts[q.id] = B.texts[q.id] || []).push({ t, at: r.t });
+        } else if (q.type === 'choice' && v) {
+          B.choices[q.id] = B.choices[q.id] || {}; B.choices[q.id][v] = (B.choices[q.id][v] || 0) + 1;
+        }
+      });
+      if (rn) B.rmeans.push(rs / rn);
+    });
+    fin(all); sections.forEach(s => fin(bySec[s])); qs.forEach(q => fin(byItem[q.id]));
+    Object.values(bySubj).forEach(B => { fin(B.all); sections.forEach(s => fin(B.sec[s])); qs.forEach(q => fin(B.item[q.id])); });
+    D.subjects.forEach(s => {
+      const k = (s.instructor || 'ไม่ระบุ').trim();
+      byInst[k] = byInst[k] || { name: k, a: acc(), subjects: [] };
+      byInst[k].subjects.push(s.name);
+      const B = bySubj[s.id];
+      for (let i = 0; i < 5; i++) for (let j = 0; j < B.all.d[i]; j++) add(byInst[k].a, i + 1);
+    });
+    Object.values(byInst).forEach(x => fin(x.a));
+    S = { qs, sections, all, bySec, byItem, bySubj, byInst, totalResp: D.responses.filter(r => subjIds.has(r.s)).length };
+  }
+
+  /* ---------- สีแผนที่ความร้อน ---------- */
+  function heatColor(m) {
+    if (m == null) return 'background:var(--line-2);color:var(--muted)';
+    const t = Math.max(0, Math.min(1, (m - 3.0) / 2.0));
+    const hue = 12 + t * 140;
+    const dark = isDark();
+    const light = dark ? 26 + t * 6 : 88 - t * 52;
+    const sat = 42;
+    const txt = dark ? '#f2eceb' : (light < 60 ? '#fff' : '#3a2a26');
+    return 'background:hsl(' + hue + ',' + sat + '%,' + light + '%);color:' + txt;
+  }
+  const distBar = d => {
+    const tot = d.reduce((a, b) => a + b, 0) || 1;
+    const cols = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)'];
+    return '<div class="dist" title="' + [5, 4, 3, 2, 1].map(v => v + ': ' + d[v - 1]).join(' · ') + '">' + [5, 4, 3, 2, 1].map(v => d[v - 1] ? '<span style="width:' + (d[v - 1] / tot * 100) + '%;background:' + cols[v - 1] + '"></span>' : '').join('') + '</div>';
+  };
+  const legend = () => '<div class="legend">' + [5, 4, 3, 2, 1].map((v, i) => '<span><i style="background:var(--s' + v + ')"></i>' + v + ' ' + esc(D.scale[i] || '') + '</span>').join('') + '</div>';
+
+  // แกน 1–5
+  const pct = m => ((m - 1) / 4 * 100);
+  function hbars(rows, ref, opts) {
+    opts = opts || {};
+    if (!rows.length) return '<div class="empty">ยังไม่มีข้อมูล</div>';
+    return rows.map(r => '<div class="hbar' + (r.click ? ' clickable' : '') + '"' + (r.click ? ' data-go="' + esc(r.click) + '"' : '') + '>' +
+      '<div class="nm">' + esc(r.name) + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</div>' +
+      '<div class="track">' + (r.v != null ? '<div class="fill" style="width:' + pct(r.v) + '%;' + (r.color ? 'background:' + r.color : '') + '"></div>' : '') +
+      (ref != null ? '<div class="ref" style="left:' + pct(ref) + '%"></div>' : '') + '</div>' +
+      '<div class="num">' + (r.v != null ? f2(r.v) : '–') + '<small>' + (r.note || '') + '</small></div></div>').join('') +
+      (opts.axis !== false ? '<div class="axis"><span></span><div class="tk"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><span></span></div>' : '');
+  }
+  const barColor = m => m == null ? '' : m >= 4.505 ? 'var(--s5)' : m >= 3.505 ? 'var(--s4)' : m >= 2.505 ? '#a7978e' : 'var(--s1)';
+
+  /* ---------- ภาพรวม ---------- */
+  function renderOverview() {
+    const subs = D.subjects, B = S.bySubj;
+    const withData = subs.filter(s => B[s.id].resp > 0);
+    const openNow = subs.filter(s => s.open);
+    const P = D.participants || 0;
+    const rate = P && withData.length ? withData.reduce((a, s) => a + B[s.id].resp, 0) / withData.length / P * 100 : null;
+    const pos = S.all.n ? (S.all.d[3] + S.all.d[4]) / S.all.n * 100 : null;
+    $('kpis').innerHTML = [
+      { lab: 'แบบประเมินที่ได้รับ', val: S.totalResp.toLocaleString(), small: 'ฉบับ', foot: '<span class="muted">' + withData.length + ' จาก ' + subs.length + ' วิชามีผลแล้ว</span>' },
+      { lab: 'ค่าเฉลี่ยรวมทุกวิชา', val: f2(S.all.mean), small: S.all.sd != null ? 'S.D. ' + f2(S.all.sd) : '', foot: lvlTag(S.all.mean) },
+      { lab: 'ระดับมาก–มากที่สุด', val: pos == null ? '–' : pos.toFixed(1), small: '%', foot: '<span class="muted">ของคำตอบทั้งหมด ' + S.all.n.toLocaleString() + ' คำตอบ</span>' },
+      P ? { lab: 'อัตราตอบกลับเฉลี่ย', val: rate == null ? '–' : rate.toFixed(0), small: '%', foot: '<span class="muted">จากผู้เข้าอบรม ' + P + ' คน</span>' }
+        : { lab: 'เปิดประเมินอยู่ขณะนี้', val: openNow.length, small: 'วิชา', foot: '<span class="muted">' + esc(openNow.map(s => s.name).join(', ') || 'ไม่มี') + '</span>' }
+    ].map(k => '<div class="card box kpi"><div class="lab">' + k.lab + '</div><div class="val">' + k.val + ' <small>' + k.small + '</small></div><div class="foot">' + k.foot + '</div></div>').join('');
+
+    $('insights').innerHTML = insights().map(i => '<li><span class="ic">' + i[0] + '</span><span>' + i[1] + '</span></li>').join('') || '<li><span class="ic">⏳</span><span>ยังไม่มีข้อมูลการประเมิน</span></li>';
+
+    $('secBars').innerHTML = hbars(S.sections.map(s => ({ name: s, v: S.bySec[s].mean, note: level(S.bySec[s].mean).t, color: barColor(S.bySec[s].mean) })), S.all.mean);
+    $('allDist').innerHTML = S.all.n ? distBar(S.all.d) + legend() : '<div class="empty">–</div>';
+
+    let rows = subs.map((s, i) => ({ s, i, m: B[s.id].all.mean, n: B[s.id].resp }));
+    if (sortMode === 'mean') rows.sort((a, b) => (b.m ?? -1) - (a.m ?? -1));
+    if (sortMode === 'n') rows.sort((a, b) => b.n - a.n);
+    $('subjBars').innerHTML = sortMode === 'n'
+      ? rows.map(r => {
+          const max = Math.max(P, ...rows.map(x => x.n), 1);
+          return '<div class="hbar clickable" data-go="' + esc(r.s.id) + '"><div class="nm">' + esc(r.s.name) + '<small>' + esc(r.s.instructor || '') + '</small></div><div class="track"><div class="fill" style="width:' + (r.n / max * 100) + '%;background:var(--primary)"></div>' + (P ? '<div class="ref" style="left:' + (P / max * 100) + '%"></div>' : '') + '</div><div class="num">' + r.n + '<small>' + (P ? (r.n / P * 100).toFixed(0) + '%' : 'ฉบับ') + '</small></div></div>';
+        }).join('') + (P ? '<div class="legend">เส้นตั้ง = จำนวนผู้เข้าอบรม ' + P + ' คน</div>' : '')
+      : hbars(rows.map(r => ({ name: r.s.name, sub: [r.s.instructor, r.s.day].filter(Boolean).join(' · '), v: r.m, note: 'n=' + r.n, color: barColor(r.m), click: r.s.id })), S.all.mean);
+    $('subjBars').querySelectorAll('[data-go]').forEach(el => el.onclick = () => goSubject(el.dataset.go));
+
+    // heatmap
+    $('heat').innerHTML = '<tr><th></th>' + S.sections.map(s => '<th>' + esc(s) + '</th>').join('') + '<th>รวม</th><th>n</th></tr>' +
+      subs.map(s => '<tr><th class="rowh">' + esc(s.name) + '</th>' + S.sections.map(x => { const m = B[s.id].sec[x].mean; return '<td style="' + heatColor(m) + '">' + f2(m) + '</td>'; }).join('') +
+        '<td style="' + heatColor(B[s.id].all.mean) + '">' + f2(B[s.id].all.mean) + '</td><td class="muted" style="font-family:inherit;font-weight:400">' + B[s.id].resp + '</td></tr>').join('');
+
+    // items
+    const items = S.qs.map(q => ({ q, m: S.byItem[q.id].mean })).filter(x => x.m != null).sort((a, b) => b.m - a.m);
+    const top = items.slice(0, 3), bot = items.length > 3 ? items.slice(-3).reverse() : [];
+    const no = q => S.qs.indexOf(q) + 1;
+    $('itemRank').innerHTML = items.length ? '<div class="muted" style="font-size:13px;margin-bottom:4px">▲ สูงสุด</div>' + hbars(top.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s5)', note: level(x.m).t })), S.all.mean, { axis: false }) +
+      (bot.length ? '<div class="muted" style="font-size:13px;margin:14px 0 4px">▼ ต่ำสุด</div>' + hbars(bot.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s2)', note: level(x.m).t })), S.all.mean) : '') : '<div class="empty">ยังไม่มีข้อมูล</div>';
+
+    const inst = Object.values(S.byInst).filter(x => x.a.n).sort((a, b) => b.a.mean - a.a.mean);
+    $('instBars').innerHTML = hbars(inst.map(x => ({ name: x.name, sub: x.subjects.length + ' วิชา', v: x.a.mean, color: barColor(x.a.mean), note: level(x.a.mean).t })), S.all.mean);
+  }
+
+  function insights() {
+    const out = [];
+    const B = S.bySubj;
+    const ws = D.subjects.filter(s => B[s.id].all.n > 0).map(s => ({ s, b: B[s.id] }));
+    if (!ws.length) return out;
+    out.push(['📊', 'ภาพรวม ' + ws.length + ' วิชา อยู่ในระดับ <b>' + level(S.all.mean).t + '</b> (x̄ = ' + f2(S.all.mean) + ', S.D. = ' + f2(S.all.sd) + ')']);
+    if (ws.length >= 2) {
+      const srt = ws.slice().sort((a, b) => b.b.all.mean - a.b.all.mean);
+      const hi = srt[0], lo = srt[srt.length - 1];
+      out.push(['🏆', 'วิชาที่ได้รับความพึงพอใจสูงสุด: <b>' + esc(hi.s.name) + '</b> (' + esc(hi.s.instructor || '') + ') x̄ = ' + f2(hi.b.all.mean)]);
+      if (hi.b.all.mean - lo.b.all.mean >= 0.01)
+        out.push(['🔻', 'วิชาที่ได้คะแนนต่ำสุด: <b>' + esc(lo.s.name) + '</b> x̄ = ' + f2(lo.b.all.mean) + ' — ต่างจากสูงสุด ' + f2(hi.b.all.mean - lo.b.all.mean) + ' คะแนน']);
+    }
+    const secs = S.sections.filter(s => S.bySec[s].n).sort((a, b) => S.bySec[b].mean - S.bySec[a].mean);
+    if (secs.length >= 2) out.push(['🧭', 'ด้านที่โดดเด่นคือ <b>' + esc(secs[0]) + '</b> (' + f2(S.bySec[secs[0]].mean) + ') ส่วน <b>' + esc(secs[secs.length - 1]) + '</b> ต่ำสุด (' + f2(S.bySec[secs[secs.length - 1]].mean) + ')']);
+    const items = S.qs.filter(q => S.byItem[q.id].n).sort((a, b) => S.byItem[a.id].mean - S.byItem[b.id].mean);
+    if (items.length >= 2) out.push(['🎯', 'ข้อที่ควรพัฒนาเป็นอันดับแรก: “' + esc(items[0].text) + '” (x̄ = ' + f2(S.byItem[items[0].id].mean) + ')']);
+    const weak = [];
+    ws.forEach(w => S.qs.forEach(q => { const m = w.b.item[q.id].mean; if (m != null && m < 3.505 && w.b.item[q.id].n >= 3) weak.push(w.s.name + ' ข้อ ' + (S.qs.indexOf(q) + 1)); }));
+    if (weak.length) out.push(['⚠️', 'มี ' + weak.length + ' รายการที่ต่ำกว่าระดับ “มาก” (&lt; 3.51): ' + esc(weak.slice(0, 4).join(', ')) + (weak.length > 4 ? ' …' : '')]);
+    else if (S.all.n) out.push(['✅', 'ทุกวิชาและทุกข้อคำถามอยู่ในระดับ “มาก” ขึ้นไป']);
+    const big = ws.filter(w => w.b.all.n >= 10).sort((a, b) => b.b.all.sd - a.b.all.sd)[0];
+    if (big && ws.length >= 3 && big.b.all.sd > S.all.sd * 1.1) out.push(['↔️', 'วิชา <b>' + esc(big.s.name) + '</b> มีความเห็นแตกต่างกันมากที่สุด (S.D. = ' + f2(big.b.all.sd) + ') ควรอ่านข้อเสนอแนะประกอบ']);
+    const P = D.participants || 0;
+    if (P) {
+      const low = ws.slice().sort((a, b) => a.b.resp - b.b.resp)[0];
+      const r = low.b.resp / P * 100;
+      if (r < 80) out.push(['📮', 'วิชา <b>' + esc(low.s.name) + '</b> มีผู้ตอบเพียง ' + low.b.resp + ' คน (' + r.toFixed(0) + '%) อาจเปิดให้ประเมินเพิ่มหรือประกาศย้ำ']);
+    }
+    const tc = ws.reduce((a, w) => a + Object.values(w.b.texts).reduce((x, y) => x + y.length, 0), 0);
+    if (tc) out.push(['💬', 'มีข้อความความคิดเห็นทั้งหมด ' + tc + ' ข้อความ — ดูได้ในแท็บรายวิชา']);
+    return out;
+  }
+
+  /* ---------- รายวิชา ---------- */
+  function goSubject(id) { curSubj = id; switchTab('subject'); }
+  function renderSubjectSel() {
+    $('subjSel').innerHTML = D.subjects.map((s, i) => '<option value="' + esc(s.id) + '">' + (i + 1) + '. ' + esc(s.name) + ' — ' + esc(s.instructor || '') + ' (n=' + S.bySubj[s.id].resp + ')</option>').join('');
+    if (!curSubj || !S.bySubj[curSubj]) curSubj = D.subjects[0] && D.subjects[0].id;
+    $('subjSel').value = curSubj || '';
+  }
+  function renderSubject() {
+    renderSubjectSel();
+    const B = S.bySubj[curSubj];
+    if (!B) { $('subjView').innerHTML = '<div class="card empty">ยังไม่มีรายวิชา</div>'; return; }
+    const s = B.subj, P = D.participants || 0;
+    let html = '<div class="card subjhead"><div><span class="tag ' + (s.open ? 'open' : '') + '">' + (s.open ? 'กำลังเปิดประเมิน' : 'ปิดประเมิน') + '</span> <span class="tag">' + esc([s.day, s.time].filter(Boolean).join(' · ')) + '</span>' +
+      '<h2 style="margin-top:10px">' + esc(s.name) + '</h2><div class="muted">วิทยากร: ' + esc(s.instructor || '-') + '</div>' +
+      '<div style="margin-top:10px;font-size:14px">ผู้ตอบ <b>' + B.resp + '</b> คน' + (P ? ' (' + (B.resp / P * 100).toFixed(0) + '% ของผู้เข้าอบรม)' : '') + ' · S.D. ' + f2(B.all.sd) + '</div></div>' +
+      '<div class="bigscore"><div class="v">' + f2(B.all.mean) + '</div><div style="margin-top:6px">' + lvlTag(B.all.mean) + '</div>' +
+      (B.all.mean != null && S.all.mean != null ? '<div class="diff ' + (B.all.mean >= S.all.mean ? 'up' : 'dn') + '" style="margin-top:6px">' + (B.all.mean >= S.all.mean ? '▲ ' : '▼ ') + f2(Math.abs(B.all.mean - S.all.mean)) + ' จากค่าเฉลี่ยรวม</div>' : '') + '</div></div>';
+
+    if (!B.resp) { $('subjView').innerHTML = html + '<div class="card empty" style="margin-top:16px">ยังไม่มีผู้ประเมินวิชานี้</div>'; return; }
+
+    html += '<div class="grid g2" style="margin-top:16px"><div class="card box"><h3>ผลรายข้อ</h3><div class="hint">▲▼ เทียบกับค่าเฉลี่ยข้อเดียวกันของทุกวิชา</div><div class="scrollx"><table class="t"><tr><th>ข้อ</th><th>รายการประเมิน</th><th class="n">x̄</th><th class="n">S.D.</th><th>ระดับ</th><th style="min-width:130px">การกระจาย</th></tr>';
+    S.sections.forEach(sec => {
+      html += '<tr class="sec"><td></td><td>' + esc(sec) + '</td><td class="n">' + f2(B.sec[sec].mean) + '</td><td class="n">' + f2(B.sec[sec].sd) + '</td><td>' + lvlTag(B.sec[sec].mean) + '</td><td></td></tr>';
+      S.qs.filter(q => q.section === sec).forEach(q => {
+        const a = B.item[q.id], g = S.byItem[q.id].mean, d = a.mean != null && g != null ? a.mean - g : null;
+        html += '<tr><td class="muted">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + (d != null && Math.abs(d) >= 0.005 ? ' <span class="diff ' + (d > 0 ? 'up' : 'dn') + '">' + (d > 0 ? '▲' : '▼') + f2(Math.abs(d)) + '</span>' : '') + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td>' + lvlTag(a.mean) + '</td><td>' + distBar(a.d) + '</td></tr>';
+      });
+    });
+    html += '<tr class="tot"><td></td><td>รวมทุกข้อ</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td>' + lvlTag(B.all.mean) + '</td><td>' + distBar(B.all.d) + '</td></tr></table></div>' + legend() + '</div>';
+
+    html += '<div><div class="card box"><h3>รายด้านเทียบภาพรวม</h3><div class="hint">แถบ = วิชานี้ · เส้นตั้ง = ค่าเฉลี่ยด้านนั้นของทุกวิชา</div>' +
+      S.sections.map(sec => hbars([{ name: sec, v: B.sec[sec].mean, color: barColor(B.sec[sec].mean), note: level(B.sec[sec].mean).t }], S.bySec[sec].mean, { axis: false })).join('') + '</div>';
+
+    // choices
+    D.questions.filter(q => q.type === 'choice').forEach(q => {
+      const c = B.choices[q.id] || {}; const tot = Object.values(c).reduce((a, b) => a + b, 0);
+      html += '<div class="card box" style="margin-top:16px"><h3>' + esc(q.text) + '</h3>' + (tot ? q.options.map(o => '<div class="hbar" style="grid-template-columns:140px 1fr 60px"><div class="nm">' + esc(o) + '</div><div class="track"><div class="fill" style="width:' + ((c[o] || 0) / tot * 100) + '%"></div></div><div class="num">' + (c[o] || 0) + '</div></div>').join('') : '<div class="empty">–</div>') + '</div>';
+    });
+    // texts
+    D.questions.filter(q => q.type === 'text').forEach(q => {
+      const t = B.texts[q.id] || [];
+      html += '<div class="card box" style="margin-top:16px"><h3>' + esc(q.text) + ' <span class="tag">' + t.length + '</span></h3><div class="comments" style="margin-top:10px">' + (t.length ? t.slice().reverse().map(x => '<div>' + esc(x.t) + '</div>').join('') : '<span class="muted">ยังไม่มีความคิดเห็น</span>') + '</div></div>';
+    });
+    html += '</div></div>';
+    $('subjView').innerHTML = html;
+  }
+
+  /* ---------- เปิด-ปิด ---------- */
+  function evalUrl() { return location.href.replace(/admin\.html.*$/, 'index.html').replace(/[?#].*$/, ''); }
+  function renderControl() {
+    const byDay = [];
+    D.subjects.forEach(s => { let g = byDay.find(d => d.day === s.day); if (!g) byDay.push(g = { day: s.day, items: [] }); g.items.push(s); });
+    $('ctlList').innerHTML = byDay.map(g => '<div class="dayhead"><h4>' + esc(g.day || 'ไม่ระบุวัน') + '</h4><div style="display:flex;gap:6px"><button class="btn ghost sm" data-day="' + esc(g.day) + '" data-o="1">เปิดทั้งวัน</button><button class="btn ghost sm" data-day="' + esc(g.day) + '" data-o="0">ปิดทั้งวัน</button></div></div>' +
+      g.items.map(s => '<div class="ctl"><div><div class="nm">' + esc(s.name) + '</div><div class="meta">' + esc([s.time, s.instructor].filter(Boolean).join(' · ')) + ' · ตอบแล้ว ' + S.bySubj[s.id].resp + ' คน</div></div><label class="switch"><input type="checkbox" data-id="' + esc(s.id) + '"' + (s.open ? ' checked' : '') + '><span></span></label></div>').join('')).join('');
+    $('ctlList').querySelectorAll('input[data-id]').forEach(i => i.onchange = () => setOpen([i.dataset.id], i.checked, i));
+    $('ctlList').querySelectorAll('button[data-day]').forEach(b => b.onclick = () => setOpen(D.subjects.filter(s => s.day === b.dataset.day).map(s => s.id), b.dataset.o === '1'));
+    $('codeShow').textContent = D.accessCode || '';
+    $('codeWrap').classList.toggle('hidden', !D.accessCode); $('noCode').classList.toggle('hidden', !!D.accessCode);
+    $('urlShow').textContent = evalUrl();
+    if (D.sheetUrl) { $('sheetLink').href = D.sheetUrl; $('sheetLink').classList.remove('hidden'); } else $('sheetLink').classList.add('hidden');
+    if (!$('qr').dataset.done) { drawQR($('qr'), evalUrl(), 180); $('qr').dataset.done = 1; }
+  }
+  function drawQR(el, text, size) {
+    if (typeof qrcode !== 'function') { el.textContent = text; return; }
+    const q = qrcode(0, 'M'); q.addData(unescape(encodeURIComponent(text))); q.make();
+    const n = q.getModuleCount(), c = document.createElement('canvas'), cell = Math.max(1, Math.floor(size / n));
+    c.width = c.height = cell * n; c.style.width = c.style.height = Math.round(size) + 'px'; c.style.imageRendering = 'pixelated';
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#000';
+    for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) g.fillRect(k * cell, r * cell, cell, cell);
+    el.innerHTML = ''; el.appendChild(c);
+  }
+  async function setOpen(ids, open, input) {
+    if (!ids.length) return;
+    try {
+      await call('setOpen', { password: pw, ids, open });
+      D.subjects.forEach(s => { if (ids.includes(s.id)) s.open = open; });
+      toast((open ? 'เปิด' : 'ปิด') + 'ประเมิน ' + ids.length + ' วิชาแล้ว');
+      renderAll();
+    } catch (e) { toast(e.message, true); if (input) input.checked = !open; }
+  }
+
+  /* ---------- ส่งออก ---------- */
+  function csv(rows, name) {
+    const s = rows.map(r => r.map(c => { c = c == null ? '' : String(c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+    const blob = new Blob(['﻿' + s], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  const n2 = x => x == null ? '' : x.toFixed(2);
+  function csvSum() {
+    const head = ['ลำดับ', 'วัน', 'เวลา', 'วิชา', 'วิทยากร', 'จำนวนผู้ตอบ', 'x̄', 'S.D.', 'ระดับ'].concat(S.sections.map(s => s + ' (x̄)'));
+    csv([head].concat(D.subjects.map((s, i) => { const B = S.bySubj[s.id]; return [i + 1, s.day, s.time, s.name, s.instructor, B.resp, n2(B.all.mean), n2(B.all.sd), level(B.all.mean).t].concat(S.sections.map(x => n2(B.sec[x].mean))); }))
+      .concat([['', '', '', 'รวมทุกวิชา', '', S.totalResp, n2(S.all.mean), n2(S.all.sd), level(S.all.mean).t].concat(S.sections.map(x => n2(S.bySec[x].mean)))]), 'สรุปผลรายวิชา.csv');
+  }
+  function csvItem() {
+    const rows = [['วิชา', 'วิทยากร', 'ข้อ', 'ด้าน', 'รายการ', 'n', 'x̄', 'S.D.', 'ระดับ', 'ตอบ 5', 'ตอบ 4', 'ตอบ 3', 'ตอบ 2', 'ตอบ 1']];
+    D.subjects.forEach(s => { const B = S.bySubj[s.id]; S.qs.forEach((q, i) => { const a = B.item[q.id]; rows.push([s.name, s.instructor, i + 1, q.section, q.text, a.n, n2(a.mean), n2(a.sd), level(a.mean).t, a.d[4], a.d[3], a.d[2], a.d[1], a.d[0]]); }); });
+    csv(rows, 'สรุปรายข้อ.csv');
+  }
+  function csvRaw() {
+    const name = {}; D.subjects.forEach(s => name[s.id] = s);
+    csv([['เวลา', 'รหัสวิชา', 'วิชา', 'วิทยากร'].concat(D.questions.map((q, i) => q.id + ' ' + q.text))].concat(D.responses.map(r => [new Date(r.t).toLocaleString('th-TH'), r.s, (name[r.s] || {}).name, (name[r.s] || {}).instructor].concat(D.questions.map(q => r.a[q.id] ?? '')))), 'ข้อมูลดิบ.csv');
+  }
+  function csvText() {
+    const rows = [['วิชา', 'วิทยากร', 'คำถาม', 'ความคิดเห็น']];
+    D.subjects.forEach(s => D.questions.filter(q => q.type === 'text').forEach(q => (S.bySubj[s.id].texts[q.id] || []).forEach(t => rows.push([s.name, s.instructor, q.text, t.t]))));
+    csv(rows, 'ข้อเสนอแนะ.csv');
+  }
+
+  /* ---------- พิมพ์ ---------- */
+  function headerHtml(title) {
+    return '<h2>' + esc(title) + '</h2><div class="c">' + esc(D.event.subtitle || '') + '</div><div class="c">' + esc(D.event.detail || '') + '</div>';
+  }
+  function printOverviewHtml() {
+    let h = headerHtml('สรุปผลการประเมินรายวิชา (ภาพรวม)') + '<table><tr><th>ที่</th><th>วิชา</th><th>วิทยากร</th><th>n</th><th>x̄</th><th>S.D.</th><th>ระดับ</th></tr>';
+    D.subjects.forEach((s, i) => { const B = S.bySubj[s.id]; h += '<tr><td class="n">' + (i + 1) + '</td><td>' + esc(s.name) + '</td><td>' + esc(s.instructor || '') + '</td><td class="n">' + B.resp + '</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td class="n">' + level(B.all.mean).t + '</td></tr>'; });
+    h += '<tr><th colspan="3">รวมทุกวิชา</th><th>' + S.totalResp + '</th><th>' + f2(S.all.mean) + '</th><th>' + f2(S.all.sd) + '</th><th>' + level(S.all.mean).t + '</th></tr></table>';
+    h += '<table><tr><th>ด้าน</th><th>x̄</th><th>S.D.</th><th>ระดับ</th></tr>' + S.sections.map(x => '<tr><td>' + esc(x) + '</td><td class="n">' + f2(S.bySec[x].mean) + '</td><td class="n">' + f2(S.bySec[x].sd) + '</td><td class="n">' + level(S.bySec[x].mean).t + '</td></tr>').join('') + '</table>';
+    const ins = insights();
+    if (ins.length) h += '<p><b>ข้อค้นพบ</b></p><ol>' + ins.map(i => '<li>' + i[1] + '</li>').join('') + '</ol>';
+    return h;
+  }
+  function printSubjectHtml(id) {
+    const B = S.bySubj[id], s = B.subj;
+    let h = headerHtml('ผลการประเมินรายวิชา') + '<p><b>วิชา</b> ' + esc(s.name) + ' &nbsp; <b>วิทยากร</b> ' + esc(s.instructor || '-') + '<br><b>วัน/เวลา</b> ' + esc([s.day, s.time].filter(Boolean).join(' ')) + ' &nbsp; <b>จำนวนผู้ตอบ</b> ' + B.resp + ' คน</p>';
+    h += '<table><tr><th style="width:36px">ที่</th><th>รายการประเมิน</th><th style="width:60px">x̄</th><th style="width:60px">S.D.</th><th style="width:90px">ระดับ</th></tr>';
+    S.sections.forEach(sec => {
+      h += '<tr><td></td><td><b>' + esc(sec) + '</b></td><td class="n"><b>' + f2(B.sec[sec].mean) + '</b></td><td class="n"><b>' + f2(B.sec[sec].sd) + '</b></td><td class="n"><b>' + level(B.sec[sec].mean).t + '</b></td></tr>';
+      S.qs.filter(q => q.section === sec).forEach(q => { const a = B.item[q.id]; h += '<tr><td class="n">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td class="n">' + level(a.mean).t + '</td></tr>'; });
+    });
+    h += '<tr><th></th><th>รวม</th><th>' + f2(B.all.mean) + '</th><th>' + f2(B.all.sd) + '</th><th>' + level(B.all.mean).t + '</th></tr></table>';
+    D.questions.filter(q => q.type === 'text').forEach(q => { const t = B.texts[q.id] || []; if (t.length) h += '<p><b>' + esc(q.text) + '</b></p><ul>' + t.map(x => '<li>' + esc(x.t) + '</li>').join('') + '</ul>'; });
+    return h;
+  }
+  function doPrint(html) { $('printArea').innerHTML = html; setTimeout(() => window.print(), 50); }
+
+  /* ---------- จัดการข้อมูล ---------- */
+  let mg = null, mgDirty = false, cfgDirty = false;
+  const CFG = [['cfgTitle', 'eventTitle'], ['cfgSub', 'eventSubtitle'], ['cfgDetail', 'eventDetail'], ['cfgInstr', 'instructions'], ['cfgThanks', 'thankYou'], ['cfgCode', 'accessCode'], ['cfgPart', 'participants']];
+  function cfgValue(k) {
+    if (k === 'accessCode') return D.accessCode || '';
+    if (k === 'participants') return D.participants || '';
+    return D.event[{ eventTitle: 'title', eventSubtitle: 'subtitle', eventDetail: 'detail', instructions: 'instructions', thankYou: 'thankYou' }[k]] || '';
+  }
+  function setStatus(el, dirty) { el.textContent = dirty ? 'ยังไม่บันทึก' : 'บันทึกแล้ว'; el.classList.toggle('dirty', dirty); }
+  function renderManage(force) {
+    if (force || !mgDirty) { mg = D.subjects.map(s => ({ id: s.id, day: s.day || '', time: s.time || '', name: s.name || '', instructor: s.instructor || '' })); mgDirty = false; }
+    drawManage();
+    if (force || !cfgDirty) { CFG.forEach(([id, k]) => $(id).value = cfgValue(k)); $('cfgPw').value = ''; cfgDirty = false; }
+    setStatus($('cfgStatus'), cfgDirty);
+  }
+  function drawManage() {
+    setStatus($('mgStatus'), mgDirty);
+    const cnt = id => (id && S.bySubj[id]) ? S.bySubj[id].resp : 0;
+    $('mgList').innerHTML = mg.length ? mg.map((s, i) => {
+      const n = cnt(s.id);
+      return '<div class="mrow' + (s.id ? '' : ' new') + '" data-i="' + i + '">' +
+        '<div class="ord"><button type="button" data-act="up" title="เลื่อนขึ้น"' + (i ? '' : ' disabled') + '>▲</button><b>' + (i + 1) + '</b><button type="button" data-act="down" title="เลื่อนลง"' + (i < mg.length - 1 ? '' : ' disabled') + '>▼</button></div>' +
+        '<div class="fields">' +
+        '<input type="text" class="full" id="mg-name-' + i + '" data-f="name" placeholder="ชื่อวิชา" value="' + esc(s.name) + '">' +
+        '<input type="text" id="mg-inst-' + i + '" data-f="instructor" placeholder="วิทยากร" value="' + esc(s.instructor) + '">' +
+        '<input type="text" id="mg-day-' + i + '" data-f="day" placeholder="วัน เช่น 6 พ.ย. 69" value="' + esc(s.day) + '">' +
+        '<input type="text" id="mg-time-' + i + '" data-f="time" placeholder="เวลา เช่น 09.00–10.00" value="' + esc(s.time) + '">' +
+        '<div class="info" style="align-self:center">' + (s.id ? 'รหัส ' + esc(s.id) + ' · ผู้ประเมิน ' + n + ' คน' : 'วิชาใหม่ (ยังไม่บันทึก)') + '</div>' +
+        '</div>' +
+        '<button type="button" class="del" data-act="del" title="' + (n ? 'ลบไม่ได้ เพราะมีผลการประเมินแล้ว' : 'ลบวิชานี้') + '"' + (n ? ' disabled' : '') + '>✕</button></div>';
+    }).join('') : '<div class="empty">ยังไม่มีรายวิชา กด “+ เพิ่มวิชา”</div>';
+    $('mgList').querySelectorAll('.mrow').forEach(row => {
+      const i = +row.dataset.i;
+      row.querySelectorAll('input').forEach(inp => inp.oninput = () => { mg[i][inp.dataset.f] = inp.value; if (!mgDirty) { mgDirty = true; setStatus($('mgStatus'), true); } });
+      row.querySelectorAll('button[data-act]').forEach(b => b.onclick = () => {
+        const a = b.dataset.act;
+        if (a === 'up' && i > 0) [mg[i - 1], mg[i]] = [mg[i], mg[i - 1]];
+        if (a === 'down' && i < mg.length - 1) [mg[i + 1], mg[i]] = [mg[i], mg[i + 1]];
+        if (a === 'del') mg.splice(i, 1);
+        mgDirty = true; drawManage();
+      });
+    });
+  }
+  $('mgAdd').onclick = () => {
+    const last = mg[mg.length - 1];
+    mg.push({ id: '', day: last ? last.day : '', time: '', name: '', instructor: '' });
+    mgDirty = true; drawManage();
+    const el = $('mg-name-' + (mg.length - 1)); if (el) el.focus();
+  };
+  $('mgCancel').onclick = () => { mgDirty = false; renderManage(false); toast('ยกเลิกการแก้ไขแล้ว'); };
+  $('mgSave').onclick = async () => {
+    const empty = mg.findIndex(s => !s.name.trim());
+    if (empty >= 0) { toast('รายวิชาลำดับที่ ' + (empty + 1) + ' ยังไม่มีชื่อวิชา', true); const el = $('mg-name-' + empty); if (el) el.focus(); return; }
+    const b = $('mgSave'); b.disabled = true; b.textContent = 'กำลังบันทึก…';
+    try {
+      await call('saveSubjects', { password: pw, subjects: mg });
+      mgDirty = false;
+      await load(true); renderManage(true);
+      toast('บันทึกรายวิชาแล้ว');
+    } catch (e) { toast(e.message, true); }
+    finally { b.disabled = false; b.textContent = 'บันทึกรายวิชา'; }
+  };
+  CFG.concat([['cfgPw']]).forEach(([id]) => $(id).addEventListener('input', () => { cfgDirty = true; setStatus($('cfgStatus'), true); }));
+  $('cfgSave').onclick = async () => {
+    const config = {};
+    CFG.forEach(([id, k]) => config[k] = $(id).value);
+    const newPw = $('cfgPw').value.trim();
+    if (newPw) { if (newPw.length < 4) { toast('รหัสผ่านแอดมินต้องยาวอย่างน้อย 4 ตัวอักษร', true); return; } config.adminPassword = newPw; }
+    const b = $('cfgSave'); b.disabled = true;
+    try {
+      await call('saveConfig', { password: pw, config });
+      if (newPw) { pw = newPw; try { sessionStorage.setItem('ev_admin', pw); } catch (e) {} }
+      cfgDirty = false;
+      await load(true); renderManage(true);
+      $('qr').dataset.done = '';
+      toast(newPw ? 'บันทึกแล้ว และเปลี่ยนรหัสผ่านแอดมินแล้ว' : 'บันทึกการตั้งค่าแล้ว');
+    } catch (e) { toast(e.message, true); }
+    finally { b.disabled = false; }
+  };
+
+  /* ---------- โครงหลัก ---------- */
+  function switchTab(t) {
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+    ['overview', 'subject', 'control', 'manage', 'export'].forEach(x => $('t' + x[0].toUpperCase() + x.slice(1)).classList.toggle('hidden', x !== t));
+    renderAll(); window.scrollTo(0, 0);
+  }
+  function activeTab() { return document.querySelector('#tabs button.on').dataset.t; }
+  function renderAll() {
+    if (!D) return;
+    compute();
+    $('hTitle').textContent = D.event.title;
+    $('hSub').textContent = D.event.subtitle || '';
+    const t = activeTab();
+    if (t === 'overview') renderOverview();
+    if (t === 'subject') renderSubject();
+    if (t === 'control') renderControl();
+    if (t === 'manage') renderManage(false);
+  }
+  async function load(quiet) {
+    try {
+      D = await call('admin', { password: pw });
+      lastOk = Date.now();
+      $('live').classList.add('on');
+      $('liveTxt').textContent = 'อัปเดต ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      renderAll();
+      return true;
+    } catch (e) {
+      $('live').classList.remove('on');
+      if (/รหัสผ่าน/.test(e.message)) { logout(); toast(e.message, true); }
+      else if (!quiet) toast('โหลดไม่สำเร็จ: ' + e.message, true);
+      else $('liveTxt').textContent = 'เชื่อมต่อไม่ได้';
+      return false;
+    }
+  }
+  function logout() { try { sessionStorage.removeItem('ev_admin'); } catch (e) {} pw = ''; clearInterval(timer); $('vApp').classList.add('hidden'); $('vLogin').classList.remove('hidden'); }
+  async function login() {
+    pw = $('pw').value; if (!pw) return;
+    $('loginBtn').disabled = true;
+    if (await load(false)) {
+      try { sessionStorage.setItem('ev_admin', pw); } catch (e) {}
+      $('vLogin').classList.add('hidden'); $('vApp').classList.remove('hidden');
+      clearInterval(timer); timer = setInterval(() => { if (!document.hidden) load(true); }, 30000);
+    }
+    $('loginBtn').disabled = false;
+  }
+
+  $('loginBtn').onclick = login;
+  $('pw').onkeydown = e => { if (e.key === 'Enter') login(); };
+  document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => switchTab(b.dataset.t));
+  document.querySelectorAll('#sortTabs button').forEach(b => b.onclick = () => { sortMode = b.dataset.s; document.querySelectorAll('#sortTabs button').forEach(x => x.classList.toggle('on', x === b)); renderOverview(); });
+  $('reloadBtn').onclick = () => load(false).then(ok => ok && toast('อัปเดตข้อมูลแล้ว'));
+  $('subjSel').onchange = () => { curSubj = $('subjSel').value; renderSubject(); };
+  const step = d => { const i = D.subjects.findIndex(s => s.id === curSubj); const n = D.subjects[(i + d + D.subjects.length) % D.subjects.length]; if (n) { curSubj = n.id; renderSubject(); } };
+  $('prevS').onclick = () => step(-1); $('nextS').onclick = () => step(1);
+  $('printS').onclick = () => curSubj && doPrint(printSubjectHtml(curSubj));
+  $('printOverview').onclick = () => doPrint(printOverviewHtml());
+  $('printAll').onclick = () => doPrint('<div class="pb">' + printOverviewHtml() + '</div>' + D.subjects.filter(s => S.bySubj[s.id].resp).map(s => '<div class="pb">' + printSubjectHtml(s.id) + '</div>').join(''));
+  $('csvSum').onclick = csvSum; $('csvItem').onclick = csvItem; $('csvRaw').onclick = csvRaw; $('csvText').onclick = csvText;
+  $('allOn').onclick = () => setOpen(D.subjects.map(s => s.id), true);
+  $('allOff').onclick = () => setOpen(D.subjects.map(s => s.id), false);
+  $('goManage').onclick = () => switchTab('manage');
+  themeButton($('themeBtn'), () => renderAll());
+  $('copyUrl').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(evalUrl()).then(() => toast('คัดลอกลิงก์แล้ว')); };
+  $('qrFull').onclick = () => {
+    $('qfTitle').textContent = D.event.title; $('qfSub').textContent = D.event.subtitle || ''; $('qfCode').textContent = D.accessCode ? 'รหัส ' + D.accessCode : '';
+    $('qrBig').innerHTML = ''; const size = Math.min(innerWidth, innerHeight) * 0.48;
+    drawQR($('qrBig'), evalUrl(), size);
+    $('qrFullView').classList.remove('hidden');
+  };
+  $('qrClose').onclick = () => $('qrFullView').classList.add('hidden');
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('qrFullView').classList.add('hidden'); });
+
+  if (pw) { $('pw').value = pw; login(); }
+})();
+</script>
+</body>
+</html>

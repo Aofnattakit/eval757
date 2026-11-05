@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>แบบประเมินรายวิชา</title>
+<meta name="theme-color" content="#1b2f57">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>try{var _t=JSON.parse(localStorage.getItem("ev_theme"));if(_t)document.documentElement.dataset.theme=_t}catch(e){}</script>
+
+<style>
+  .top { background: var(--head); border-top: 4px solid var(--cross); color: #fff; padding: 22px 18px 54px; position: relative; overflow: hidden; }
+  .top::after { content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; border: 28px solid var(--grayblue); opacity: .18; }
+  .theme-btn { position: absolute; top: 14px; right: 14px; z-index: 2; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.12); color: #fff; font-size: 17px; }
+  .theme-btn:hover { background: rgba(255,255,255,.22); }
+  .top .kicker { font-size: 13px; opacity: .85; letter-spacing: .02em; }
+  .top .kicker, .top h1, .top .sub { padding-right: 46px; }
+  .top h1 { font-size: 20px; margin-top: 2px; max-width: 640px; }
+  .top .sub { font-size: 14px; opacity: .92; margin-top: 6px; max-width: 640px; }
+  .wrap { max-width: 680px; margin: -36px auto 40px; padding: 0 14px; position: relative; }
+  .panel { padding: 20px; }
+  .panel + .panel { margin-top: 14px; }
+
+  /* รหัส */
+  .code-input { font-size: 28px; letter-spacing: .3em; text-align: center; font-weight: 600; padding: 14px; }
+
+  /* รายวิชา */
+  .day { margin-top: 18px; }
+  .day h3 { font-size: 15px; color: var(--muted); font-weight: 500; margin: 0 4px 8px; }
+  .subj { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); margin-bottom: 8px; width: 100%; text-align: left; }
+  .subj.can { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .subj.can:hover { background: var(--primary-soft); }
+  .subj:disabled { cursor: default; opacity: .62; }
+  .subj .num { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--line-2); font-weight: 600; font-family: Prompt, sans-serif; }
+  .subj.can .num { background: var(--primary); color: #fff; }
+  .subj.isdone .num { background: var(--good); color: #fff; }
+  .subj .body { flex: 1; min-width: 0; }
+  .subj .name { font-weight: 600; line-height: 1.35; }
+  .subj .meta { font-size: 13px; color: var(--muted); }
+  .subj .go { flex: none; font-size: 20px; color: var(--primary); }
+  .listbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .progress-sum { font-size: 14px; color: var(--muted); }
+
+  /* แบบประเมิน */
+  .form-head { padding: 18px 20px; }
+  .form-head .name { font-size: 20px; font-family: Prompt, sans-serif; font-weight: 600; line-height: 1.3; }
+  .sticky { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0 8px; }
+  .bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--primary); transition: width .25s; }
+  .section-title { font-size: 15px; color: var(--primary); border-left: 3px solid var(--cross); padding-left: 8px; margin: 22px 4px 10px; font-weight: 600; }
+  .q { padding: 16px; margin-bottom: 10px; transition: box-shadow .2s, border-color .2s; }
+  .q.missing { border-color: var(--s1); box-shadow: 0 0 0 3px rgba(194,65,45,.15); }
+  .q .qt { font-weight: 500; margin-bottom: 12px; }
+  .q .qt b { color: var(--muted); font-weight: 500; margin-right: 4px; }
+  .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .scale button { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 8px 2px 7px; display: flex; flex-direction: column; align-items: center; gap: 1px; transition: .15s; }
+  .scale button .n { font-size: 20px; font-weight: 600; font-family: Prompt, sans-serif; line-height: 1.2; }
+  .scale button .l { font-size: 11px; color: var(--muted); line-height: 1.2; text-align: center; }
+  .scale button:hover { border-color: var(--primary); }
+  .scale button.on { color: #fff; border-color: transparent; transform: translateY(-1px); }
+  .scale button.on .l { color: rgba(255,255,255,.9); }
+  .scale button.on[data-v="5"] { background: var(--s5); }
+  .scale button.on[data-v="4"] { background: #3e9467; }
+  .scale button.on[data-v="3"] { background: #8d817a; }
+  .scale button.on[data-v="2"] { background: #d0714f; }
+  .scale button.on[data-v="1"] { background: var(--s1); }
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  .choices button { border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 8px 14px; }
+  .choices button.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+  textarea { min-height: 84px; resize: vertical; }
+  .actions { display: flex; gap: 10px; margin-top: 18px; }
+  .actions .btn { flex: 1; padding: 15px; }
+
+  .thanks { text-align: center; padding: 34px 22px; }
+  .thanks .check { width: 72px; height: 72px; border-radius: 50%; background: var(--good); color: #fff; display: grid; place-items: center; font-size: 38px; margin: 0 auto 14px; animation: pop .4s ease-out; }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .foot { text-align: center; font-size: 12px; color: var(--muted); margin-top: 24px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="demo" class="demo-banner hidden">โหมดตัวอย่าง · <a href="admin.html" style="color:inherit;font-weight:600">ไปหน้าแอดมิน →</a></div>
+<header class="top">
+  <button id="themeBtn" class="theme-btn" type="button">☾</button>
+  <div class="kicker" id="evKicker">แบบประเมินรายวิชา</div>
+  <h1 id="evTitle">กำลังโหลด…</h1>
+  <div class="sub" id="evSub"></div>
+</header>
+
+<main class="wrap">
+  <div id="vLoading" class="card panel"><div class="spinner"></div></div>
+
+  <!-- รหัสเข้าร่วม -->
+  <section id="vCode" class="hidden">
+    <div class="card panel">
+      <h2 style="font-size:19px">กรอกรหัสเข้าร่วมการประเมิน</h2>
+      <p class="muted" style="margin:4px 0 16px;font-size:14px">รับรหัสจากเจ้าหน้าที่ประจำการฝึกอบรม · ไม่ต้องระบุชื่อ</p>
+      <input id="codeIn" class="code-input" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="••••">
+      <button id="codeBtn" class="btn block" style="margin-top:14px;padding:15px">เข้าสู่แบบประเมิน</button>
+    </div>
+  </section>
+
+  <!-- รายวิชา -->
+  <section id="vList" class="hidden">
+    <div class="card panel">
+      <div class="listbar">
+        <div>
+          <h2 style="font-size:19px">เลือกวิชาที่จะประเมิน</h2>
+          <div class="progress-sum" id="sumTxt"></div>
+        </div>
+        <button class="btn ghost sm" id="refreshBtn" title="โหลดรายการใหม่">↻ รีเฟรช</button>
+      </div>
+      <p class="muted" style="font-size:13px;margin:10px 0 0" id="instr"></p>
+    </div>
+    <div id="dayList"></div>
+  </section>
+
+  <!-- แบบประเมิน -->
+  <section id="vForm" class="hidden">
+    <div class="card form-head">
+      <span class="tag" id="fDay"></span>
+      <div class="name" id="fName" style="margin-top:8px"></div>
+      <div class="muted" id="fInst" style="margin-top:4px"></div>
+    </div>
+    <div class="sticky">
+      <div class="bar"><i id="fBar"></i></div>
+      <div class="muted" style="font-size:12px;margin-top:4px;text-align:right" id="fCount"></div>
+    </div>
+    <div id="fBody"></div>
+    <div class="muted" id="sendNote" style="font-size:13px;text-align:center;margin-top:14px" aria-live="polite"></div>
+    <div class="actions">
+      <button class="btn ghost" id="backBtn" style="flex:.45">ย้อนกลับ</button>
+      <button class="btn" id="sendBtn">ส่งแบบประเมิน</button>
+    </div>
+  </section>
+
+  <!-- ขอบคุณ -->
+  <section id="vThanks" class="hidden">
+    <div class="card thanks">
+      <div class="check">✓</div>
+      <h2 style="font-size:21px">ส่งแบบประเมินเรียบร้อย</h2>
+      <p class="muted" id="thanksTxt" style="margin:8px 0 20px"></p>
+      <button class="btn block" id="nextBtn" style="padding:15px">ประเมินวิชาอื่น</button>
+    </div>
+  </section>
+
+  <div class="foot" id="footTxt"></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  const { call, store, esc, DEMO, themeButton } = window.EvalCommon;
+  themeButton(document.getElementById('themeBtn'));
+  const $ = id => document.getElementById(id);
+  const views = ['vLoading', 'vCode', 'vList', 'vForm', 'vThanks'];
+  function show(v) { views.forEach(x => $(x).classList.toggle('hidden', x !== v)); window.scrollTo(0, 0); }
+
+  let toastT;
+  function toast(msg, err) {
+    const t = $('toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+    clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast', 2800);
+  }
+
+  // โทเคนประจำอุปกรณ์ (ไม่ระบุตัวตน ใช้กันประเมินซ้ำ)
+  let token = store.get('ev_token', null);
+  if (!token) {
+    token = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2))).replace(/-/g, '');
+    store.set('ev_token', token);
+  }
+  let done = store.get('ev_done', []);
+  let code = store.get('ev_code', '');
+  let data = null, current = null, answers = {};
+
+  if (DEMO) $('demo').classList.remove('hidden');
+
+  async function load(silent) {
+    try {
+      data = await call('public');
+      const e = data.event;
+      document.title = e.title;
+      $('evKicker').textContent = e.title;
+      $('evTitle').textContent = e.subtitle ? e.subtitle.replace(/\s*รุ่นที่.*/, '') : e.title;
+      const rm = (e.subtitle || '').match(/รุ่นที่\s*\S+/);
+      $('evSub').textContent = [rm ? rm[0] : '', e.detail].filter(Boolean).join(' · ');
+      $('instr').textContent = e.instructions || '';
+      $('thanksTxt').textContent = e.thankYou || '';
+      return true;
+    } catch (err) {
+      if (!silent) { show('vLoading'); $('vLoading').innerHTML = '<p style="text-align:center">โหลดข้อมูลไม่สำเร็จ<br><span class="muted" style="font-size:14px">' + esc(err.message) + '</span></p><button class="btn block" onclick="location.reload()">ลองใหม่</button>'; }
+      else toast('โหลดไม่สำเร็จ: ' + err.message, true);
+      return false;
+    }
+  }
+
+  function renderList() {
+    const subs = data.subjects;
+    const byDay = [];
+    subs.forEach(s => {
+      let g = byDay.find(d => d.day === s.day);
+      if (!g) byDay.push(g = { day: s.day, items: [] });
+      g.items.push(s);
+    });
+    const openCount = subs.filter(s => s.open && !done.includes(s.id)).length;
+    const doneCount = subs.filter(s => done.includes(s.id)).length;
+    $('sumTxt').textContent = 'ประเมินแล้ว ' + doneCount + ' / ' + subs.length + ' วิชา' + (openCount ? ' · รอประเมิน ' + openCount + ' วิชา' : '');
+    let i = 0;
+    $('dayList').innerHTML = byDay.map(g => '<div class="day"><h3>' + esc(g.day || 'ไม่ระบุวัน') + '</h3>' + g.items.map(s => {
+      i++;
+      const isDone = done.includes(s.id);
+      const can = s.open && !isDone;
+      const status = isDone ? '<span class="tag done">ประเมินแล้ว</span>' : s.open ? '<span class="tag open">เปิดประเมิน</span>' : '<span class="tag">ยังไม่เปิด</span>';
+      return '<button class="subj ' + (can ? 'can' : '') + (isDone ? ' isdone' : '') + '" data-id="' + esc(s.id) + '"' + (can ? '' : ' disabled') + '>' +
+        '<span class="num">' + (isDone ? '✓' : i) + '</span>' +
+        '<span class="body"><span class="name">' + esc(s.name) + '</span><br><span class="meta">' + esc(s.instructor || '') + (s.time ? ' · ' + esc(s.time) : '') + '</span><br>' + status + '</span>' +
+        (can ? '<span class="go">›</span>' : '') + '</button>';
+    }).join('') + '</div>').join('') || '<div class="card panel muted" style="margin-top:14px">ยังไม่มีรายวิชา</div>';
+    $('dayList').querySelectorAll('.subj.can').forEach(b => b.onclick = () => openForm(b.dataset.id));
+  }
+
+  function openForm(id) {
+    current = data.subjects.find(s => s.id === id);
+    if (!current) return;
+    answers = store.get('ev_draft_' + id, {});
+    $('fDay').textContent = [current.day, current.time].filter(Boolean).join(' · ');
+    $('fName').textContent = current.name;
+    $('fInst').textContent = current.instructor ? 'วิทยากร: ' + current.instructor : '';
+    const sections = [];
+    data.questions.forEach(q => {
+      let g = sections.find(s => s.name === q.section);
+      if (!g) sections.push(g = { name: q.section, items: [] });
+      g.items.push(q);
+    });
+    let n = 0;
+    $('fBody').innerHTML = sections.map(g => '<div class="section-title">' + esc(g.name) + '</div>' + g.items.map(q => {
+      let inner;
+      if (q.type === 'scale') {
+        n++;
+        inner = '<div class="scale">' + [5, 4, 3, 2, 1].map((v, k) => '<button type="button" data-v="' + v + '" class="' + (answers[q.id] == v ? 'on' : '') + '"><span class="n">' + v + '</span><span class="l">' + esc(data.scale[k] || '') + '</span></button>').join('') + '</div>';
+      } else if (q.type === 'choice') {
+        inner = '<div class="choices">' + q.options.map(o => '<button type="button" data-c="' + esc(o) + '" class="' + (answers[q.id] === o ? 'on' : '') + '">' + esc(o) + '</button>').join('') + '</div>';
+      } else {
+        inner = '<textarea placeholder="พิมพ์ความคิดเห็น (ไม่บังคับ)">' + esc(answers[q.id] || '') + '</textarea>';
+      }
+      return '<div class="card q" data-q="' + esc(q.id) + '" data-type="' + q.type + '"><div class="qt">' + (q.type === 'scale' ? '<b>' + n + '.</b>' : '') + esc(q.text) + '</div>' + inner + '</div>';
+    }).join('')).join('');
+
+    $('fBody').querySelectorAll('.q').forEach(box => {
+      const qid = box.dataset.q;
+      box.querySelectorAll('.scale button').forEach(b => b.onclick = () => {
+        box.querySelectorAll('.scale button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on'); answers[qid] = Number(b.dataset.v); box.classList.remove('missing');
+        saveDraft(); progress();
+        const next = box.nextElementSibling && box.nextElementSibling.classList.contains('q') ? box.nextElementSibling : null;
+        if (next && next.dataset.type === 'scale' && !answers[next.dataset.q]) {
+          const r = next.getBoundingClientRect();
+          if (r.bottom > window.innerHeight - 20) window.scrollBy({ top: r.top - 90, behavior: 'smooth' });
+        }
+      });
+      box.querySelectorAll('.choices button').forEach(b => b.onclick = () => {
+        box.querySelectorAll('.choices button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on'); answers[qid] = b.dataset.c; saveDraft();
+      });
+      const ta = box.querySelector('textarea');
+      if (ta) ta.oninput = () => { answers[qid] = ta.value; saveDraft(); };
+    });
+    progress();
+    show('vForm');
+  }
+
+  function saveDraft() { if (current) store.set('ev_draft_' + current.id, answers); }
+  function scaleQs() { return data.questions.filter(q => q.type === 'scale'); }
+  function progress() {
+    const qs = scaleQs(); const a = qs.filter(q => answers[q.id]).length;
+    $('fBar').style.width = (qs.length ? a / qs.length * 100 : 100) + '%';
+    $('fCount').textContent = 'ตอบแล้ว ' + a + ' / ' + qs.length + ' ข้อ';
+  }
+
+  async function send() {
+    const miss = scaleQs().filter(q => !answers[q.id]);
+    if (miss.length) {
+      miss.forEach(q => { const el = document.querySelector('.q[data-q="' + CSS.escape(q.id) + '"]'); if (el) el.classList.add('missing'); });
+      const first = document.querySelector('.q.missing');
+      if (first) window.scrollBy({ top: first.getBoundingClientRect().top - 90, behavior: 'smooth' });
+      toast('ยังตอบไม่ครบ ' + miss.length + ' ข้อ', true);
+      return;
+    }
+    const btn = $('sendBtn'); btn.disabled = true; $('backBtn').disabled = true;
+    const fatal = m => /ประเมินวิชานี้แล้ว|รหัสเข้าร่วม|ปิดรับ|ครบทุกข้อ|ไม่พบรายวิชา|ข้อมูลอุปกรณ์/.test(m);
+    const waits = [0, 2000, 4000, 7000];
+    let err = null;
+    for (let i = 0; i < waits.length; i++) {
+      if (waits[i]) {
+        btn.textContent = 'กำลังลองส่งอีกครั้ง… (' + (i + 1) + '/' + waits.length + ')';
+        $('sendNote').textContent = 'มีผู้ส่งพร้อมกันจำนวนมาก ระบบกำลังส่งให้อัตโนมัติ กรุณาอย่าปิดหน้านี้';
+        await new Promise(r => setTimeout(r, waits[i] + Math.random() * 1500));
+      } else btn.textContent = 'กำลังส่ง…';
+      try {
+        await call('submit', { code, token, subjectId: current.id, answers });
+        err = null; break;
+      } catch (e) {
+        err = e;
+        // ครั้งก่อนอาจบันทึกสำเร็จแล้วแต่ตอบกลับไม่ทัน
+        if (i > 0 && /ประเมินวิชานี้แล้ว/.test(e.message)) { err = null; break; }
+        if (fatal(e.message)) break;
+      }
+    }
+    btn.disabled = false; $('backBtn').disabled = false; btn.textContent = 'ส่งแบบประเมิน'; $('sendNote').textContent = '';
+    if (!err) { markDone(current.id); show('vThanks'); return; }
+    if (/ประเมินวิชานี้แล้ว/.test(err.message)) { markDone(current.id); toast(err.message); renderList(); show('vList'); }
+    else if (/รหัสเข้าร่วม/.test(err.message)) { store.del('ev_code'); code = ''; toast(err.message, true); show('vCode'); }
+    else if (/ปิดรับ/.test(err.message)) { toast(err.message, true); await load(true); renderList(); show('vList'); }
+    else toast('ยังส่งไม่สำเร็จ คำตอบยังอยู่ครบ กรุณากดส่งอีกครั้ง', true);
+  }
+  function markDone(id) {
+    if (!done.includes(id)) done.push(id);
+    store.set('ev_done', done); store.del('ev_draft_' + id);
+  }
+
+  async function submitCode() {
+    const v = $('codeIn').value.trim();
+    if (!v) return;
+    $('codeBtn').disabled = true;
+    try {
+      await call('checkCode', { code: v });
+      code = v; store.set('ev_code', v); renderList(); show('vList');
+    } catch (err) { toast(err.message, true); }
+    finally { $('codeBtn').disabled = false; }
+  }
+
+  $('codeBtn').onclick = submitCode;
+  $('codeIn').onkeydown = e => { if (e.key === 'Enter') submitCode(); };
+  $('backBtn').onclick = () => { renderList(); show('vList'); };
+  $('sendBtn').onclick = send;
+  $('nextBtn').onclick = async () => { await load(true); renderList(); show('vList'); };
+  $('refreshBtn').onclick = async () => { $('refreshBtn').disabled = true; if (await load(true)) { renderList(); toast('อัปเดตรายการแล้ว'); } $('refreshBtn').disabled = false; };
+
+  // รีเฟรชอัตโนมัติเมื่ออยู่หน้ารายวิชา
+  setInterval(async () => { if (!$('vList').classList.contains('hidden') && !document.hidden) { if (await load(true)) renderList(); } }, 45000);
+  document.addEventListener('visibilitychange', async () => { if (!document.hidden && !$('vList').classList.contains('hidden')) { if (await load(true)) renderList(); } });
+
+  (async () => {
+    if (!(await load(false))) return;
+    if (data.event.needCode && !code) show('vCode');
+    else { renderList(); show('vList'); }
+  })();
+})();
+</script>
+</body>
+</html>
