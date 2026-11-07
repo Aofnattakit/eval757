@@ -77,6 +77,25 @@
   .thanks { text-align: center; padding: 34px 22px; }
   .thanks .check { width: 72px; height: 72px; border-radius: 50%; background: var(--good); color: #fff; display: grid; place-items: center; font-size: 38px; margin: 0 auto 14px; animation: pop .4s ease-out; }
   @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  /* แบบประเมินภาพรวม */
+  .final-card { display: flex; gap: 14px; align-items: center; width: 100%; text-align: left; margin-top: 14px; padding: 16px 18px; border-radius: 16px; border: 0; color: #fff; background: var(--head); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .final-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--cross); }
+  .final-card .ic { flex: none; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,.14); display: grid; place-items: center; font-family: Prompt, sans-serif; font-weight: 700; font-size: 19px; }
+  .final-card .body { flex: 1; min-width: 0; }
+  .final-card .name { font-family: Prompt, sans-serif; font-weight: 600; font-size: 17px; line-height: 1.3; }
+  .final-card .meta { font-size: 13px; opacity: .85; }
+  .final-card .go { font-size: 22px; }
+  .final-card:hover { filter: brightness(1.08); }
+  .final-card.isdone { background: var(--card); color: var(--ink); border: 1px solid var(--line); cursor: default; }
+  .final-card.isdone .ic { background: var(--good); color: #fff; }
+  .final-card.isdone:hover { filter: none; }
+  .steps { display: flex; gap: 6px; margin-bottom: 8px; }
+  .steps span { flex: 1; font-size: 12px; text-align: center; padding: 5px 4px; border-radius: 8px; background: var(--line-2); color: var(--muted); font-weight: 500; }
+  .steps span.on { background: var(--primary); color: #fff; }
+  .steps span.ok { background: var(--primary-soft); color: var(--primary); }
+  .part-title { font-family: Prompt, sans-serif; font-size: 18px; font-weight: 600; margin: 18px 4px 4px; line-height: 1.35; }
+  .part-hint { font-size: 13px; color: var(--muted); margin: 0 4px 6px; }
+  .other-in { margin-top: 10px; }
   .foot { text-align: center; font-size: 12px; color: var(--muted); margin-top: 24px; }
   .hidden { display: none !important; }
 </style>
@@ -115,7 +134,28 @@
       </div>
       <p class="muted" style="font-size:13px;margin:10px 0 0" id="instr"></p>
     </div>
+    <div id="finalSlot"></div>
     <div id="dayList"></div>
+  </section>
+
+  <!-- แบบประเมินผลการฝึกอบรม (ภาพรวม) -->
+  <section id="vFinal" class="hidden">
+    <div class="card form-head">
+      <span class="tag" id="xTag">แบบประเมินภาพรวม</span>
+      <div class="name" id="xName" style="margin-top:8px"></div>
+      <div class="muted" id="xInst" style="margin-top:6px;font-size:14px"></div>
+    </div>
+    <div class="sticky">
+      <div class="steps" id="xSteps"></div>
+      <div class="bar"><i id="xBar"></i></div>
+      <div class="muted" style="font-size:12px;margin-top:4px;text-align:right" id="xCount"></div>
+    </div>
+    <div id="xBody"></div>
+    <div class="muted" id="xNote" style="font-size:13px;text-align:center;margin-top:14px" aria-live="polite"></div>
+    <div class="actions">
+      <button class="btn ghost" id="xBack" style="flex:.45">ย้อนกลับ</button>
+      <button class="btn" id="xNext">ถัดไป</button>
+    </div>
   </section>
 
   <!-- แบบประเมิน -->
@@ -143,7 +183,7 @@
       <div class="check">✓</div>
       <h2 style="font-size:21px">ส่งแบบประเมินเรียบร้อย</h2>
       <p class="muted" id="thanksTxt" style="margin:8px 0 20px"></p>
-      <button class="btn block" id="nextBtn" style="padding:15px">ประเมินวิชาอื่น</button>
+      <button class="btn block" id="nextBtn" style="padding:15px">กลับไปหน้ารายการ</button>
     </div>
   </section>
 
@@ -158,7 +198,7 @@
   const { call, store, esc, DEMO, themeButton } = window.EvalCommon;
   themeButton(document.getElementById('themeBtn'));
   const $ = id => document.getElementById(id);
-  const views = ['vLoading', 'vCode', 'vList', 'vForm', 'vThanks'];
+  const views = ['vLoading', 'vCode', 'vList', 'vForm', 'vFinal', 'vThanks'];
   function show(v) { views.forEach(x => $(x).classList.toggle('hidden', x !== v)); window.scrollTo(0, 0); }
 
   let toastT;
@@ -221,7 +261,145 @@
         (can ? '<span class="go">›</span>' : '') + '</button>';
     }).join('') + '</div>').join('') || '<div class="card panel muted" style="margin-top:14px">ยังไม่มีรายวิชา</div>';
     $('dayList').querySelectorAll('.subj.can').forEach(b => b.onclick = () => openForm(b.dataset.id));
+    renderFinalCard();
   }
+
+  /* ---------- แบบประเมินผลการฝึกอบรม (ภาพรวม) ---------- */
+  const FID = '__final';
+  let fx = null; // { parts, step, answers }
+  function renderFinalCard() {
+    const F = data.final, slot = $('finalSlot');
+    if (!F) { slot.innerHTML = ''; return; }
+    const isDone = done.includes(FID);
+    if (!isDone && !F.open) { slot.innerHTML = ''; return; }
+    const nParts = new Set(F.questions.map(q => q.part)).size;
+    slot.innerHTML = '<button class="final-card' + (isDone ? ' isdone' : '') + '" id="finalBtn"' + (isDone ? ' disabled' : '') + '>' +
+      '<span class="ic">' + (isDone ? '✓' : '★') + '</span><span class="body"><span class="name">' + esc(F.title) + '</span><br>' +
+      '<span class="meta">' + (isDone ? 'ประเมินแล้ว ขอบคุณครับ/ค่ะ' : 'ภาพรวมการฝึกอบรม · ' + nParts + ' ตอน · ประมาณ 5 นาที') + '</span></span>' +
+      (isDone ? '' : '<span class="go">›</span>') + '</button>';
+    if (!isDone) $('finalBtn').onclick = openFinal;
+  }
+  function headFor(part) {
+    const h = data.final.heads || {};
+    const k = Object.keys(h).find(k => part.indexOf(k) === 0);
+    return k ? h[k] : '';
+  }
+  function openFinal() {
+    const F = data.final;
+    const parts = [];
+    F.questions.forEach(q => { let p = parts.find(x => x.name === q.part); if (!p) parts.push(p = { name: q.part, items: [] }); p.items.push(q); });
+    const saved = store.get('ev_fdraft', {});
+    fx = { parts, step: Math.min(saved.step || 0, parts.length - 1), answers: saved.answers || {} };
+    $('xName').textContent = F.title;
+    $('xInst').textContent = F.instructions || '';
+    drawFinal();
+    show('vFinal');
+  }
+  function saveFx() { store.set('ev_fdraft', { step: fx.step, answers: fx.answers }); }
+  const isOther = o => /^อื่น/.test(o);
+  function needed(q) { return q.type === 'scale' || q.type === 'choice'; }
+  function answered(q) {
+    const a = fx.answers[q.id];
+    if (q.type === 'scale') return !!a;
+    if (q.type === 'choice') return !!a && (!isOther(a) || !!String(fx.answers[q.id + '_other'] || '').trim());
+    return true;
+  }
+  function drawFinal() {
+    const part = fx.parts[fx.step], A = fx.answers;
+    $('xSteps').innerHTML = fx.parts.map((p, i) => '<span class="' + (i === fx.step ? 'on' : (fx.parts[i].items.filter(needed).every(answered) ? 'ok' : '')) + '">' + esc((p.name.match(/^ตอนที่\s*\S+/) || [p.name])[0]) + '</span>').join('');
+    const head = headFor(part.name);
+    const secs = [];
+    part.items.forEach(q => { let s = secs.find(x => x.name === q.section); if (!s) secs.push(s = { name: q.section, items: [] }); s.items.push(q); });
+    let n = 0;
+    $('xBody').innerHTML = '<div class="part-title">' + esc(part.name) + '</div>' + (head ? '<div class="part-hint">ให้คะแนน' + esc(head) + ' 5 = มากที่สุด … 1 = น้อยที่สุด</div>' : '') +
+      secs.map(g => (secs.length > 1 || g.name !== 'ข้อมูลพื้นฐาน' ? '<div class="section-title">' + esc(g.name) + '</div>' : '') + g.items.map(q => {
+        let inner;
+        if (q.type === 'scale') {
+          n++;
+          inner = '<div class="scale">' + [5, 4, 3, 2, 1].map((v, k) => '<button type="button" data-v="' + v + '" class="' + (A[q.id] == v ? 'on' : '') + '"><span class="n">' + v + '</span><span class="l">' + esc(data.scale[k] || '') + '</span></button>').join('') + '</div>';
+        } else if (q.type === 'choice') {
+          n++;
+          const oth = q.options.find(isOther);
+          inner = '<div class="choices">' + q.options.map(o => '<button type="button" data-c="' + esc(o) + '" class="' + (A[q.id] === o ? 'on' : '') + '">' + esc(o) + '</button>').join('') + '</div>' +
+            (oth ? '<input type="text" class="other-in' + (A[q.id] === oth ? '' : ' hidden') + '" id="oth-' + esc(q.id) + '" maxlength="200" placeholder="โปรดระบุ" value="' + esc(A[q.id + '_other'] || '') + '">' : '');
+        } else {
+          inner = '<textarea placeholder="พิมพ์ข้อเสนอแนะ (ไม่บังคับ)">' + esc(A[q.id] || '') + '</textarea>';
+        }
+        return '<div class="card q" data-q="' + esc(q.id) + '" data-type="' + q.type + '"><div class="qt">' + (needed(q) ? '<b>' + n + '.</b>' : '') + esc(q.text) + '</div>' + inner + '</div>';
+      }).join('')).join('');
+    $('xBody').querySelectorAll('.q').forEach(box => {
+      const qid = box.dataset.q;
+      box.querySelectorAll('.scale button').forEach(b => b.onclick = () => {
+        box.querySelectorAll('.scale button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on'); A[qid] = Number(b.dataset.v); box.classList.remove('missing'); saveFx(); fxProgress();
+        let nx = box.nextElementSibling; while (nx && !nx.classList.contains('q')) nx = nx.nextElementSibling;
+        if (nx && nx.dataset.type === 'scale' && !A[nx.dataset.q]) { const r = nx.getBoundingClientRect(); if (r.bottom > innerHeight - 20) scrollBy({ top: r.top - 110, behavior: 'smooth' }); }
+      });
+      box.querySelectorAll('.choices button').forEach(b => b.onclick = () => {
+        box.querySelectorAll('.choices button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on'); A[qid] = b.dataset.c;
+        const oi = box.querySelector('.other-in');
+        if (oi) { oi.classList.toggle('hidden', !isOther(b.dataset.c)); if (isOther(b.dataset.c)) oi.focus(); }
+        if (answered({ id: qid, type: 'choice' })) box.classList.remove('missing');
+        saveFx(); fxProgress();
+      });
+      const oi = box.querySelector('.other-in');
+      if (oi) oi.oninput = () => { A[qid + '_other'] = oi.value; if (answered({ id: qid, type: 'choice' })) box.classList.remove('missing'); saveFx(); fxProgress(); };
+      const ta = box.querySelector('textarea');
+      if (ta) ta.oninput = () => { A[qid] = ta.value; saveFx(); };
+    });
+    const last = fx.step === fx.parts.length - 1;
+    $('xNext').textContent = last ? 'ส่งแบบประเมิน' : 'ถัดไป: ' + ((fx.parts[fx.step + 1].name.match(/^ตอนที่\s*\S+/) || [''])[0]) + ' ›';
+    $('xBack').textContent = fx.step ? '‹ ตอนก่อนหน้า' : 'ย้อนกลับ';
+    fxProgress();
+  }
+  function fxProgress() {
+    const all = fx.parts.flatMap(p => p.items).filter(needed);
+    const a = all.filter(answered).length;
+    $('xBar').style.width = (all.length ? a / all.length * 100 : 100) + '%';
+    const cur = fx.parts[fx.step].items.filter(needed);
+    $('xCount').textContent = 'ตอนนี้ตอบแล้ว ' + cur.filter(answered).length + ' / ' + cur.length + ' ข้อ · ทั้งหมด ' + a + ' / ' + all.length;
+  }
+  function checkStep() {
+    const miss = fx.parts[fx.step].items.filter(q => needed(q) && !answered(q));
+    if (!miss.length) return true;
+    miss.forEach(q => { const el = $('xBody').querySelector('.q[data-q="' + CSS.escape(q.id) + '"]'); if (el) el.classList.add('missing'); });
+    const first = $('xBody').querySelector('.q.missing');
+    if (first) scrollBy({ top: first.getBoundingClientRect().top - 110, behavior: 'smooth' });
+    toast('ยังตอบไม่ครบ ' + miss.length + ' ข้อ', true);
+    return false;
+  }
+  async function finalNext() {
+    if (!checkStep()) return;
+    if (fx.step < fx.parts.length - 1) { fx.step++; saveFx(); drawFinal(); scrollTo(0, 0); return; }
+    const btn = $('xNext'); btn.disabled = true; $('xBack').disabled = true;
+    const fatal = m => /ประเมินแบบประเมินนี้แล้ว|รหัสเข้าร่วม|ปิดรับ|ครบทุกข้อ|โปรดระบุ|กรุณาระบุ|ข้อมูลอุปกรณ์|ยังไม่มีแบบประเมิน/.test(m);
+    const waits = [0, 2000, 4000, 7000];
+    let err = null;
+    for (let i = 0; i < waits.length; i++) {
+      if (waits[i]) {
+        btn.textContent = 'กำลังลองส่งอีกครั้ง… (' + (i + 1) + '/' + waits.length + ')';
+        $('xNote').textContent = 'มีผู้ส่งพร้อมกันจำนวนมาก ระบบกำลังส่งให้อัตโนมัติ กรุณาอย่าปิดหน้านี้';
+        await new Promise(r => setTimeout(r, waits[i] + Math.random() * 1500));
+      } else btn.textContent = 'กำลังส่ง…';
+      try { await call('submitFinal', { code, token, answers: fx.answers }); err = null; break; }
+      catch (e) {
+        err = e;
+        if (i > 0 && /ประเมินแบบประเมินนี้แล้ว/.test(e.message)) { err = null; break; }
+        if (fatal(e.message)) break;
+      }
+    }
+    btn.disabled = false; $('xBack').disabled = false; $('xNote').textContent = '';
+    if (!err) { if (!done.includes(FID)) done.push(FID); store.set('ev_done', done); store.del('ev_fdraft'); show('vThanks'); return; }
+    drawFinal();
+    if (/ประเมินแบบประเมินนี้แล้ว/.test(err.message)) { if (!done.includes(FID)) done.push(FID); store.set('ev_done', done); toast(err.message); renderList(); show('vList'); }
+    else if (/รหัสเข้าร่วม/.test(err.message)) { store.del('ev_code'); code = ''; toast(err.message, true); show('vCode'); }
+    else if (/ปิดรับ/.test(err.message)) { toast(err.message, true); await load(true); renderList(); show('vList'); }
+    else if (fatal(err.message)) toast(err.message, true);
+    else toast('ยังส่งไม่สำเร็จ คำตอบยังอยู่ครบ กรุณากดส่งอีกครั้ง', true);
+  }
+  $('xNext').onclick = finalNext;
+  $('xBack').onclick = () => { if (fx.step) { fx.step--; saveFx(); drawFinal(); scrollTo(0, 0); } else { renderList(); show('vList'); } };
 
   function openForm(id) {
     current = data.subjects.find(s => s.id === id);

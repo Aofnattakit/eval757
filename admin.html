@@ -34,7 +34,9 @@
 
   .page { max-width: 1240px; margin: 0 auto; padding: 20px 18px 60px; }
   .grid { display: grid; gap: 16px; }
+  .grid > * { min-width: 0; }
   .g4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 520px) { .g4 { grid-template-columns: 1fr 1fr; gap: 10px; } .kpi .val { font-size: 26px; } .box { padding: 14px; } .hbar, .axis { grid-template-columns: minmax(90px, 130px) 1fr 70px; } .optrow { grid-template-columns: minmax(80px, 120px) 1fr 84px; } }
   .g2 { grid-template-columns: 1.25fr 1fr; }
   .g2e { grid-template-columns: 1fr 1fr; }
   @media (max-width: 900px) { .g4 { grid-template-columns: repeat(2, 1fr); } .g2, .g2e { grid-template-columns: 1fr; } }
@@ -57,7 +59,7 @@
   .ins b { font-weight: 600; }
 
   /* bars */
-  .hbar { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 70px; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .hbar { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 76px; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--line); }
   .hbar:last-child { border-bottom: 0; }
   .hbar .nm { font-size: 14px; line-height: 1.3; overflow: hidden; }
   .hbar .nm small { color: var(--muted); display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -67,7 +69,7 @@
   .hbar .num { font-family: Prompt; font-weight: 600; text-align: right; }
   .hbar .num small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); font-family: 'IBM Plex Sans Thai'; }
   .hbar.clickable { cursor: pointer; } .hbar.clickable:hover .nm { color: var(--primary); }
-  .axis { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 70px; gap: 10px; font-size: 11px; color: var(--muted); }
+  .axis { display: grid; grid-template-columns: minmax(120px, 230px) 1fr 76px; gap: 10px; font-size: 11px; color: var(--muted); }
   .axis .tk { display: flex; justify-content: space-between; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
@@ -152,6 +154,33 @@
   .cfg textarea { min-height: 0; resize: vertical; }
   .tag.dirty { background: #fff1d6; color: #8a5a00; }
 
+  /* สรุปอ่านง่าย */
+  .lead { padding: 18px 22px; margin-bottom: 16px; font-size: 16px; line-height: 1.75; border-left: 5px solid var(--primary); }
+  .lead b { color: var(--primary); font-weight: 600; }
+  .lead .big { font-family: Prompt; font-size: 20px; font-weight: 600; }
+  .scards { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .scard { text-align: left; border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 14px 16px; display: grid; gap: 6px; cursor: pointer; transition: border-color .15s, transform .1s; min-width: 0; }
+  .scard:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .scard .nm { font-weight: 600; line-height: 1.3; }
+  .scard .ins2 { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .scard .pc { font-family: Prompt; font-size: 30px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .scard .pc small { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .scard .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .scard.nodata { cursor: default; opacity: .6; }
+  .ptab td.p { text-align: center; font-variant-numeric: tabular-nums; font-size: 13px; min-width: 52px; }
+  .ptab th.p { text-align: center; }
+  .optrow { display: grid; grid-template-columns: minmax(110px, 190px) 1fr 92px; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .optrow:last-child { border-bottom: 0; }
+  .optrow .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .optrow .num b { font-family: Prompt; }
+  .others { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .fbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .fbar .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .g3 { grid-template-columns: 1fr; } }
+  .ctl.fin { background: var(--primary-soft); border-radius: 12px; padding: 12px 14px; margin-top: 12px; border: 0; }
+  .ctl.fin .nm { color: var(--primary); }
+
   #printArea { display: none; }
   @media print {
     body > *:not(#printArea) { display: none !important; }
@@ -186,6 +215,7 @@
     <nav class="tabs" id="tabs">
       <button data-t="overview" class="on">ภาพรวม</button>
       <button data-t="subject">รายวิชา</button>
+      <button data-t="final">ประเมินภาพรวม</button>
       <button data-t="control">เปิด-ปิดประเมิน</button>
       <button data-t="manage">จัดการข้อมูล</button>
       <button data-t="export">ส่งออก</button>
@@ -197,7 +227,13 @@
   <div class="page">
     <!-- ภาพรวม -->
     <section id="tOverview">
+      <div class="card lead" id="lead"></div>
       <div class="grid g4" id="kpis"></div>
+      <div class="card box" style="margin-top:16px">
+        <h3>สรุปรายวิชา</h3>
+        <div class="hint">ร้อยละความพึงพอใจ = ค่าเฉลี่ย × 20 · คลิกการ์ดเพื่อดูรายละเอียด</div>
+        <div class="scards" id="scards"></div>
+      </div>
       <div class="grid g2" style="margin-top:16px">
         <div class="card box">
           <h3>ข้อค้นพบสำคัญ</h3>
@@ -205,8 +241,8 @@
           <ul class="ins" id="insights"></ul>
         </div>
         <div class="card box">
-          <h3>ค่าเฉลี่ยรายด้าน</h3>
-          <div class="hint">รวมทุกวิชา · เส้นตั้ง = ค่าเฉลี่ยรวม</div>
+          <h3>ร้อยละความพึงพอใจรายด้าน</h3>
+          <div class="hint">รวมทุกวิชา · เส้นตั้ง = ภาพรวม</div>
           <div id="secBars"></div>
           <h3 style="margin-top:22px">การกระจายคำตอบทั้งหมด</h3>
           <div class="hint">สัดส่วนระดับคะแนน 5 → 1</div>
@@ -215,7 +251,7 @@
       </div>
       <div class="card box" style="margin-top:16px">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
-          <div><h3>เปรียบเทียบรายวิชา</h3><div class="hint">คลิกชื่อวิชาเพื่อดูรายละเอียด · เส้นตั้ง = ค่าเฉลี่ยรวม</div></div>
+          <div><h3>จัดอันดับร้อยละความพึงพอใจรายวิชา</h3><div class="hint">คลิกชื่อวิชาเพื่อดูรายละเอียด · เส้นตั้ง = ภาพรวม</div></div>
           <div class="tabs" id="sortTabs"><button data-s="mean" class="on">เรียงตามคะแนน</button><button data-s="order">เรียงตามตาราง</button><button data-s="n">จำนวนผู้ตอบ</button></div>
         </div>
         <div id="subjBars"></div>
@@ -241,6 +277,9 @@
       </div>
       <div id="subjView"></div>
     </section>
+
+    <!-- ประเมินภาพรวม -->
+    <section id="tFinal" class="hidden"><div id="finalView"></div></section>
 
     <!-- เปิดปิด -->
     <section id="tControl" class="hidden">
@@ -309,6 +348,10 @@
             <textarea id="cfgInstr" rows="2"></textarea>
             <label for="cfgThanks">ข้อความหลังส่งแบบประเมิน</label>
             <input type="text" id="cfgThanks">
+            <label for="cfgFTitle">ชื่อแบบประเมินภาพรวม</label>
+            <input type="text" id="cfgFTitle">
+            <label for="cfgFInstr">คำชี้แจงแบบประเมินภาพรวม</label>
+            <textarea id="cfgFInstr" rows="3"></textarea>
             <label for="cfgPw">เปลี่ยนรหัสผ่านแอดมิน <span class="muted">(เว้นว่าง = ใช้รหัสเดิม)</span></label>
             <input type="password" id="cfgPw" autocomplete="new-password">
           </div>
@@ -331,6 +374,9 @@
             <button class="btn ghost" id="csvItem">สรุปรายข้อของทุกวิชา</button>
             <button class="btn ghost" id="csvRaw">ข้อมูลดิบทั้งหมด</button>
             <button class="btn ghost" id="csvText">ข้อเสนอแนะทั้งหมด</button>
+            <div class="muted" style="font-size:13px;margin-top:6px">แบบประเมินผลการฝึกอบรม (ภาพรวม)</div>
+            <button class="btn ghost" id="csvFinal">สรุปผลแบบประเมินภาพรวม (จำนวน ร้อยละ x̄ S.D.)</button>
+            <button class="btn ghost" id="csvFinalRaw">ข้อมูลดิบแบบประเมินภาพรวม</button>
           </div>
         </div>
         <div class="card box">
@@ -338,7 +384,8 @@
           <div class="hint">ตารางแบบรายงานผลการประเมิน (x̄, S.D., ระดับ) ขนาด A4</div>
           <div style="display:grid;gap:10px">
             <button class="btn" id="printAll">พิมพ์รายงานสรุปภาพรวม + ทุกรายวิชา</button>
-            <button class="btn ghost" id="printOverview">พิมพ์เฉพาะสรุปภาพรวม</button>
+            <button class="btn ghost" id="printOverview">พิมพ์เฉพาะสรุปรายวิชา</button>
+            <button class="btn ghost" id="printFinal">พิมพ์รายงานแบบประเมินผลการฝึกอบรม (ภาพรวม)</button>
           </div>
           <p class="muted" style="font-size:13px;margin-top:14px">เกณฑ์แปลความหมาย: 4.51–5.00 มากที่สุด · 3.51–4.50 มาก · 2.51–3.50 ปานกลาง · 1.51–2.50 น้อย · 1.00–1.50 น้อยที่สุด</p>
         </div>
@@ -383,6 +430,9 @@
     if (m >= 1.505) return { t: 'น้อย', c: 'l2' };
     return { t: 'น้อยที่สุด', c: 'l1' };
   }
+  const fp = m => (m == null || isNaN(m)) ? '–' : (m * 20).toFixed(1) + '%';
+  const f1 = x => (x == null || isNaN(x)) ? '–' : x.toFixed(1);
+  const posOf = a => a && a.n ? (a.d[3] + a.d[4]) / a.n * 100 : null;
   const lvlTag = m => { const l = level(m); return l.c ? '<span class="lvl ' + l.c + '">' + l.t + '</span>' : '<span class="muted">–</span>'; };
   function acc() { return { n: 0, s: 0, s2: 0, d: [0, 0, 0, 0, 0] }; }
   function add(a, v) { a.n++; a.s += v; a.s2 += v * v; a.d[v - 1]++; }
@@ -460,8 +510,8 @@
       '<div class="nm">' + esc(r.name) + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</div>' +
       '<div class="track">' + (r.v != null ? '<div class="fill" style="width:' + pct(r.v) + '%;' + (r.color ? 'background:' + r.color : '') + '"></div>' : '') +
       (ref != null ? '<div class="ref" style="left:' + pct(ref) + '%"></div>' : '') + '</div>' +
-      '<div class="num">' + (r.v != null ? f2(r.v) : '–') + '<small>' + (r.note || '') + '</small></div></div>').join('') +
-      (opts.axis !== false ? '<div class="axis"><span></span><div class="tk"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><span></span></div>' : '');
+      '<div class="num">' + (r.v != null ? (opts.percent ? fp(r.v) : f2(r.v)) : '–') + '<small>' + (r.note || '') + '</small></div></div>').join('') +
+      (opts.axis !== false ? '<div class="axis"><span></span><div class="tk">' + (opts.percent ? '<span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span>' : '<span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>') + '</div><span></span></div>' : '');
   }
   const barColor = m => m == null ? '' : m >= 4.505 ? 'var(--s5)' : m >= 3.505 ? 'var(--s4)' : m >= 2.505 ? '#a7978e' : 'var(--s1)';
 
@@ -472,10 +522,26 @@
     const openNow = subs.filter(s => s.open);
     const P = D.participants || 0;
     const rate = P && withData.length ? withData.reduce((a, s) => a + B[s.id].resp, 0) / withData.length / P * 100 : null;
-    const pos = S.all.n ? (S.all.d[3] + S.all.d[4]) / S.all.n * 100 : null;
+    const pos = posOf(S.all);
+    // สรุปเป็นภาษาพูด
+    const rk = withData.slice().sort((a, b) => B[b.id].all.mean - B[a.id].all.mean);
+    $('lead').innerHTML = S.all.n
+      ? 'ผู้เข้าอบรมพึงพอใจภาควิชาการโดยรวม <span class="big">' + fp(S.all.mean) + '</span> อยู่ในระดับ <b>' + level(S.all.mean).t + '</b> (x̄ = ' + f2(S.all.mean) + ') ' +
+        'จากแบบประเมิน ' + S.totalResp.toLocaleString() + ' ฉบับ ใน ' + withData.length + ' วิชา · ร้อยละ <b>' + f1(pos) + '</b> ของคำตอบอยู่ในระดับ “มาก” ถึง “มากที่สุด”' +
+        (rk.length > 1 ? ' · วิชาที่ได้รับความพึงพอใจสูงสุดคือ <b>' + esc(rk[0].name) + '</b> (' + fp(B[rk[0].id].all.mean) + ')' : '')
+      : 'ยังไม่มีผลการประเมินรายวิชา เมื่อผู้เข้าอบรมเริ่มประเมิน ผลสรุปจะแสดงที่นี่';
+    $('scards').innerHTML = subs.map(s => {
+      const b = B[s.id], m = b.all.mean;
+      if (!b.resp) return '<div class="scard nodata"><div class="nm">' + esc(s.name) + '</div><div class="ins2">' + esc(s.instructor || '') + '</div><div class="pc" style="color:var(--muted)">–</div><div class="row"><span>ยังไม่มีผู้ประเมิน</span>' + (s.open ? '<span class="tag open">เปิดอยู่</span>' : '') + '</div></div>';
+      return '<button class="scard" data-go="' + esc(s.id) + '"><div class="nm">' + esc(s.name) + '</div><div class="ins2">' + esc([s.instructor, s.day].filter(Boolean).join(' · ')) + '</div>' +
+        '<div class="pc" style="color:' + (barColor(m) || 'inherit') + '">' + (m * 20).toFixed(1) + '<small> %</small></div>' +
+        '<div class="row">' + lvlTag(m) + '<span>x̄ ' + f2(m) + '</span></div>' + distBar(b.all.d) +
+        '<div class="row"><span>ผู้ตอบ ' + b.resp + ' คน' + (P ? ' (' + (b.resp / P * 100).toFixed(0) + '%)' : '') + '</span><span>มาก+ ' + f1(posOf(b.all)) + '%</span></div></button>';
+    }).join('') || '<div class="empty">ยังไม่มีรายวิชา</div>';
+    $('scards').querySelectorAll('[data-go]').forEach(el => el.onclick = () => goSubject(el.dataset.go));
     $('kpis').innerHTML = [
+      { lab: 'ร้อยละความพึงพอใจรวม', val: S.all.n ? (S.all.mean * 20).toFixed(1) : '–', small: '%', foot: lvlTag(S.all.mean) + ' <span class="muted">x̄ ' + f2(S.all.mean) + ' · S.D. ' + f2(S.all.sd) + '</span>' },
       { lab: 'แบบประเมินที่ได้รับ', val: S.totalResp.toLocaleString(), small: 'ฉบับ', foot: '<span class="muted">' + withData.length + ' จาก ' + subs.length + ' วิชามีผลแล้ว</span>' },
-      { lab: 'ค่าเฉลี่ยรวมทุกวิชา', val: f2(S.all.mean), small: S.all.sd != null ? 'S.D. ' + f2(S.all.sd) : '', foot: lvlTag(S.all.mean) },
       { lab: 'ระดับมาก–มากที่สุด', val: pos == null ? '–' : pos.toFixed(1), small: '%', foot: '<span class="muted">ของคำตอบทั้งหมด ' + S.all.n.toLocaleString() + ' คำตอบ</span>' },
       P ? { lab: 'อัตราตอบกลับเฉลี่ย', val: rate == null ? '–' : rate.toFixed(0), small: '%', foot: '<span class="muted">จากผู้เข้าอบรม ' + P + ' คน</span>' }
         : { lab: 'เปิดประเมินอยู่ขณะนี้', val: openNow.length, small: 'วิชา', foot: '<span class="muted">' + esc(openNow.map(s => s.name).join(', ') || 'ไม่มี') + '</span>' }
@@ -483,7 +549,7 @@
 
     $('insights').innerHTML = insights().map(i => '<li><span class="ic">' + i[0] + '</span><span>' + i[1] + '</span></li>').join('') || '<li><span class="ic">⏳</span><span>ยังไม่มีข้อมูลการประเมิน</span></li>';
 
-    $('secBars').innerHTML = hbars(S.sections.map(s => ({ name: s, v: S.bySec[s].mean, note: level(S.bySec[s].mean).t, color: barColor(S.bySec[s].mean) })), S.all.mean);
+    $('secBars').innerHTML = hbars(S.sections.map(s => ({ name: s, v: S.bySec[s].mean, note: 'x̄ ' + f2(S.bySec[s].mean) + ' · ' + level(S.bySec[s].mean).t, color: barColor(S.bySec[s].mean) })), S.all.mean, { percent: true });
     $('allDist').innerHTML = S.all.n ? distBar(S.all.d) + legend() : '<div class="empty">–</div>';
 
     let rows = subs.map((s, i) => ({ s, i, m: B[s.id].all.mean, n: B[s.id].resp }));
@@ -494,7 +560,7 @@
           const max = Math.max(P, ...rows.map(x => x.n), 1);
           return '<div class="hbar clickable" data-go="' + esc(r.s.id) + '"><div class="nm">' + esc(r.s.name) + '<small>' + esc(r.s.instructor || '') + '</small></div><div class="track"><div class="fill" style="width:' + (r.n / max * 100) + '%;background:var(--primary)"></div>' + (P ? '<div class="ref" style="left:' + (P / max * 100) + '%"></div>' : '') + '</div><div class="num">' + r.n + '<small>' + (P ? (r.n / P * 100).toFixed(0) + '%' : 'ฉบับ') + '</small></div></div>';
         }).join('') + (P ? '<div class="legend">เส้นตั้ง = จำนวนผู้เข้าอบรม ' + P + ' คน</div>' : '')
-      : hbars(rows.map(r => ({ name: r.s.name, sub: [r.s.instructor, r.s.day].filter(Boolean).join(' · '), v: r.m, note: 'n=' + r.n, color: barColor(r.m), click: r.s.id })), S.all.mean);
+      : hbars(rows.map(r => ({ name: r.s.name, sub: [r.s.instructor, r.s.day].filter(Boolean).join(' · '), v: r.m, note: 'x̄ ' + f2(r.m) + ' · n=' + r.n, color: barColor(r.m), click: r.s.id })), S.all.mean, { percent: true });
     $('subjBars').querySelectorAll('[data-go]').forEach(el => el.onclick = () => goSubject(el.dataset.go));
 
     // heatmap
@@ -506,11 +572,11 @@
     const items = S.qs.map(q => ({ q, m: S.byItem[q.id].mean })).filter(x => x.m != null).sort((a, b) => b.m - a.m);
     const top = items.slice(0, 3), bot = items.length > 3 ? items.slice(-3).reverse() : [];
     const no = q => S.qs.indexOf(q) + 1;
-    $('itemRank').innerHTML = items.length ? '<div class="muted" style="font-size:13px;margin-bottom:4px">▲ สูงสุด</div>' + hbars(top.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s5)', note: level(x.m).t })), S.all.mean, { axis: false }) +
-      (bot.length ? '<div class="muted" style="font-size:13px;margin:14px 0 4px">▼ ต่ำสุด</div>' + hbars(bot.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s2)', note: level(x.m).t })), S.all.mean) : '') : '<div class="empty">ยังไม่มีข้อมูล</div>';
+    $('itemRank').innerHTML = items.length ? '<div class="muted" style="font-size:13px;margin-bottom:4px">▲ สูงสุด</div>' + hbars(top.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s5)', note: fp(x.m) })), S.all.mean, { axis: false }) +
+      (bot.length ? '<div class="muted" style="font-size:13px;margin:14px 0 4px">▼ ต่ำสุด</div>' + hbars(bot.map(x => ({ name: 'ข้อ ' + no(x.q) + ' ' + x.q.text, v: x.m, color: 'var(--s2)', note: fp(x.m) })), S.all.mean) : '') : '<div class="empty">ยังไม่มีข้อมูล</div>';
 
     const inst = Object.values(S.byInst).filter(x => x.a.n).sort((a, b) => b.a.mean - a.a.mean);
-    $('instBars').innerHTML = hbars(inst.map(x => ({ name: x.name, sub: x.subjects.length + ' วิชา', v: x.a.mean, color: barColor(x.a.mean), note: level(x.a.mean).t })), S.all.mean);
+    $('instBars').innerHTML = hbars(inst.map(x => ({ name: x.name, sub: x.subjects.length + ' วิชา', v: x.a.mean, color: barColor(x.a.mean), note: 'x̄ ' + f2(x.a.mean) })), S.all.mean, { percent: true });
   }
 
   function insights() {
@@ -518,18 +584,18 @@
     const B = S.bySubj;
     const ws = D.subjects.filter(s => B[s.id].all.n > 0).map(s => ({ s, b: B[s.id] }));
     if (!ws.length) return out;
-    out.push(['📊', 'ภาพรวม ' + ws.length + ' วิชา อยู่ในระดับ <b>' + level(S.all.mean).t + '</b> (x̄ = ' + f2(S.all.mean) + ', S.D. = ' + f2(S.all.sd) + ')']);
+    out.push(['📊', 'ภาพรวม ' + ws.length + ' วิชา พึงพอใจร้อยละ <b>' + fp(S.all.mean) + '</b> ระดับ <b>' + level(S.all.mean).t + '</b> (x̄ = ' + f2(S.all.mean) + ', S.D. = ' + f2(S.all.sd) + ')']);
     if (ws.length >= 2) {
       const srt = ws.slice().sort((a, b) => b.b.all.mean - a.b.all.mean);
       const hi = srt[0], lo = srt[srt.length - 1];
-      out.push(['🏆', 'วิชาที่ได้รับความพึงพอใจสูงสุด: <b>' + esc(hi.s.name) + '</b> (' + esc(hi.s.instructor || '') + ') x̄ = ' + f2(hi.b.all.mean)]);
+      out.push(['🏆', 'วิชาที่ได้รับความพึงพอใจสูงสุด: <b>' + esc(hi.s.name) + '</b> (' + esc(hi.s.instructor || '') + ') ร้อยละ ' + fp(hi.b.all.mean)]);
       if (hi.b.all.mean - lo.b.all.mean >= 0.01)
-        out.push(['🔻', 'วิชาที่ได้คะแนนต่ำสุด: <b>' + esc(lo.s.name) + '</b> x̄ = ' + f2(lo.b.all.mean) + ' — ต่างจากสูงสุด ' + f2(hi.b.all.mean - lo.b.all.mean) + ' คะแนน']);
+        out.push(['🔻', 'วิชาที่ได้คะแนนต่ำสุด: <b>' + esc(lo.s.name) + '</b> ร้อยละ ' + fp(lo.b.all.mean) + ' — ต่างจากสูงสุด ' + ((hi.b.all.mean - lo.b.all.mean) * 20).toFixed(1) + ' จุด']);
     }
     const secs = S.sections.filter(s => S.bySec[s].n).sort((a, b) => S.bySec[b].mean - S.bySec[a].mean);
-    if (secs.length >= 2) out.push(['🧭', 'ด้านที่โดดเด่นคือ <b>' + esc(secs[0]) + '</b> (' + f2(S.bySec[secs[0]].mean) + ') ส่วน <b>' + esc(secs[secs.length - 1]) + '</b> ต่ำสุด (' + f2(S.bySec[secs[secs.length - 1]].mean) + ')']);
+    if (secs.length >= 2) out.push(['🧭', 'ด้านที่โดดเด่นคือ <b>' + esc(secs[0]) + '</b> (' + fp(S.bySec[secs[0]].mean) + ') ส่วน <b>' + esc(secs[secs.length - 1]) + '</b> ต่ำสุด (' + fp(S.bySec[secs[secs.length - 1]].mean) + ')']);
     const items = S.qs.filter(q => S.byItem[q.id].n).sort((a, b) => S.byItem[a.id].mean - S.byItem[b.id].mean);
-    if (items.length >= 2) out.push(['🎯', 'ข้อที่ควรพัฒนาเป็นอันดับแรก: “' + esc(items[0].text) + '” (x̄ = ' + f2(S.byItem[items[0].id].mean) + ')']);
+    if (items.length >= 2) out.push(['🎯', 'ข้อที่ควรพัฒนาเป็นอันดับแรก: “' + esc(items[0].text) + '” (' + fp(S.byItem[items[0].id].mean) + ')']);
     const weak = [];
     ws.forEach(w => S.qs.forEach(q => { const m = w.b.item[q.id].mean; if (m != null && m < 3.505 && w.b.item[q.id].n >= 3) weak.push(w.s.name + ' ข้อ ' + (S.qs.indexOf(q) + 1)); }));
     if (weak.length) out.push(['⚠️', 'มี ' + weak.length + ' รายการที่ต่ำกว่าระดับ “มาก” (&lt; 3.51): ' + esc(weak.slice(0, 4).join(', ')) + (weak.length > 4 ? ' …' : '')]);
@@ -547,6 +613,23 @@
     return out;
   }
 
+  // ตารางร้อยละผู้ตอบแต่ละระดับ
+  function levelTable(qs, sections, itemAcc, secAcc, allAcc, numFn) {
+    const cell = (cnt, n, v) => {
+      const p = n ? cnt / n * 100 : 0;
+      const col = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)'][v - 1];
+      return '<td class="p" style="background:color-mix(in srgb, ' + col + ' ' + Math.round(Math.min(p, 100) * 0.55) + '%, transparent)">' + (n ? p.toFixed(1) : '–') + '</td>';
+    };
+    const row = (lab, no, a, cls) => '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td class="muted">' + no + '</td><td>' + esc(lab) + '</td>' + [5, 4, 3, 2, 1].map(v => cell(a.d[v - 1], a.n, v)).join('') + '<td class="n">' + f1(posOf(a)) + '</td></tr>';
+    let h = '<div class="scrollx"><table class="t ptab"><tr><th>ข้อ</th><th>รายการประเมิน</th>' + [5, 4, 3, 2, 1].map((v, i) => '<th class="p">' + v + '<br><span style="font-weight:400">' + esc(D.scale[i] || '') + '</span></th>').join('') + '<th class="n">มาก+<br><span style="font-weight:400">(4–5)</span></th></tr>';
+    sections.forEach(sec => {
+      if (sections.length > 1 || sec) h += '<tr class="sec"><td></td><td colspan="7">' + esc(sec) + '</td></tr>';
+      qs.filter(q => q.section === sec).forEach(q => h += row(q.text, numFn ? numFn(q) : qs.indexOf(q) + 1, itemAcc(q)));
+    });
+    h += row('รวม', '', allAcc, 'tot') + '</table></div><div class="legend">ตัวเลขเป็นร้อยละ (%) ของผู้ตอบในแต่ละข้อ · สีเข้ม = มีผู้ตอบมาก</div>';
+    return h;
+  }
+
   /* ---------- รายวิชา ---------- */
   function goSubject(id) { curSubj = id; switchTab('subject'); }
   function renderSubjectSel() {
@@ -562,23 +645,23 @@
     let html = '<div class="card subjhead"><div><span class="tag ' + (s.open ? 'open' : '') + '">' + (s.open ? 'กำลังเปิดประเมิน' : 'ปิดประเมิน') + '</span> <span class="tag">' + esc([s.day, s.time].filter(Boolean).join(' · ')) + '</span>' +
       '<h2 style="margin-top:10px">' + esc(s.name) + '</h2><div class="muted">วิทยากร: ' + esc(s.instructor || '-') + '</div>' +
       '<div style="margin-top:10px;font-size:14px">ผู้ตอบ <b>' + B.resp + '</b> คน' + (P ? ' (' + (B.resp / P * 100).toFixed(0) + '% ของผู้เข้าอบรม)' : '') + ' · S.D. ' + f2(B.all.sd) + '</div></div>' +
-      '<div class="bigscore"><div class="v">' + f2(B.all.mean) + '</div><div style="margin-top:6px">' + lvlTag(B.all.mean) + '</div>' +
-      (B.all.mean != null && S.all.mean != null ? '<div class="diff ' + (B.all.mean >= S.all.mean ? 'up' : 'dn') + '" style="margin-top:6px">' + (B.all.mean >= S.all.mean ? '▲ ' : '▼ ') + f2(Math.abs(B.all.mean - S.all.mean)) + ' จากค่าเฉลี่ยรวม</div>' : '') + '</div></div>';
+      '<div class="bigscore"><div class="v">' + fp(B.all.mean) + '</div><div class="muted" style="font-size:13px;margin-top:2px">ร้อยละความพึงพอใจ · x̄ ' + f2(B.all.mean) + '</div><div style="margin-top:6px">' + lvlTag(B.all.mean) + '</div>' +
+      (B.all.mean != null && S.all.mean != null ? '<div class="diff ' + (B.all.mean >= S.all.mean ? 'up' : 'dn') + '" style="margin-top:6px">' + (B.all.mean >= S.all.mean ? '▲ ' : '▼ ') + (Math.abs(B.all.mean - S.all.mean) * 20).toFixed(1) + ' จุด จากภาพรวม</div>' : '') + '</div></div>';
 
     if (!B.resp) { $('subjView').innerHTML = html + '<div class="card empty" style="margin-top:16px">ยังไม่มีผู้ประเมินวิชานี้</div>'; return; }
 
-    html += '<div class="grid g2" style="margin-top:16px"><div class="card box"><h3>ผลรายข้อ</h3><div class="hint">▲▼ เทียบกับค่าเฉลี่ยข้อเดียวกันของทุกวิชา</div><div class="scrollx"><table class="t"><tr><th>ข้อ</th><th>รายการประเมิน</th><th class="n">x̄</th><th class="n">S.D.</th><th>ระดับ</th><th style="min-width:130px">การกระจาย</th></tr>';
+    html += '<div class="grid g2" style="margin-top:16px"><div class="card box"><h3>ผลรายข้อ</h3><div class="hint">▲▼ เทียบกับค่าเฉลี่ยข้อเดียวกันของทุกวิชา</div><div class="scrollx"><table class="t"><tr><th>ข้อ</th><th>รายการประเมิน</th><th class="n">x̄</th><th class="n">S.D.</th><th class="n">ร้อยละ</th><th>ระดับ</th><th style="min-width:130px">การกระจาย</th></tr>';
     S.sections.forEach(sec => {
-      html += '<tr class="sec"><td></td><td>' + esc(sec) + '</td><td class="n">' + f2(B.sec[sec].mean) + '</td><td class="n">' + f2(B.sec[sec].sd) + '</td><td>' + lvlTag(B.sec[sec].mean) + '</td><td></td></tr>';
+      html += '<tr class="sec"><td></td><td>' + esc(sec) + '</td><td class="n">' + f2(B.sec[sec].mean) + '</td><td class="n">' + f2(B.sec[sec].sd) + '</td><td class="n">' + fp(B.sec[sec].mean) + '</td><td>' + lvlTag(B.sec[sec].mean) + '</td><td></td></tr>';
       S.qs.filter(q => q.section === sec).forEach(q => {
         const a = B.item[q.id], g = S.byItem[q.id].mean, d = a.mean != null && g != null ? a.mean - g : null;
-        html += '<tr><td class="muted">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + (d != null && Math.abs(d) >= 0.005 ? ' <span class="diff ' + (d > 0 ? 'up' : 'dn') + '">' + (d > 0 ? '▲' : '▼') + f2(Math.abs(d)) + '</span>' : '') + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td>' + lvlTag(a.mean) + '</td><td>' + distBar(a.d) + '</td></tr>';
+        html += '<tr><td class="muted">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + (d != null && Math.abs(d) >= 0.005 ? ' <span class="diff ' + (d > 0 ? 'up' : 'dn') + '">' + (d > 0 ? '▲' : '▼') + f2(Math.abs(d)) + '</span>' : '') + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td class="n">' + fp(a.mean) + '</td><td>' + lvlTag(a.mean) + '</td><td>' + distBar(a.d) + '</td></tr>';
       });
     });
-    html += '<tr class="tot"><td></td><td>รวมทุกข้อ</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td>' + lvlTag(B.all.mean) + '</td><td>' + distBar(B.all.d) + '</td></tr></table></div>' + legend() + '</div>';
+    html += '<tr class="tot"><td></td><td>รวมทุกข้อ</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td class="n">' + fp(B.all.mean) + '</td><td>' + lvlTag(B.all.mean) + '</td><td>' + distBar(B.all.d) + '</td></tr></table></div>' + legend() + '</div>';
 
-    html += '<div><div class="card box"><h3>รายด้านเทียบภาพรวม</h3><div class="hint">แถบ = วิชานี้ · เส้นตั้ง = ค่าเฉลี่ยด้านนั้นของทุกวิชา</div>' +
-      S.sections.map(sec => hbars([{ name: sec, v: B.sec[sec].mean, color: barColor(B.sec[sec].mean), note: level(B.sec[sec].mean).t }], S.bySec[sec].mean, { axis: false })).join('') + '</div>';
+    html += '<div><div class="card box"><h3>รายด้านเทียบภาพรวม</h3><div class="hint">แถบ = วิชานี้ · เส้นตั้ง = ด้านเดียวกันของทุกวิชา</div>' +
+      S.sections.map(sec => hbars([{ name: sec, v: B.sec[sec].mean, color: barColor(B.sec[sec].mean), note: level(B.sec[sec].mean).t }], S.bySec[sec].mean, { axis: false, percent: true })).join('') + '</div>';
 
     // choices
     D.questions.filter(q => q.type === 'choice').forEach(q => {
@@ -591,7 +674,210 @@
       html += '<div class="card box" style="margin-top:16px"><h3>' + esc(q.text) + ' <span class="tag">' + t.length + '</span></h3><div class="comments" style="margin-top:10px">' + (t.length ? t.slice().reverse().map(x => '<div>' + esc(x.t) + '</div>').join('') : '<span class="muted">ยังไม่มีความคิดเห็น</span>') + '</div></div>';
     });
     html += '</div></div>';
+    html += '<div class="card box" style="margin-top:16px"><h3>ร้อยละของผู้ตอบแต่ละระดับ (รายข้อ)</h3><div class="hint">อ่านตามแถว: แต่ละข้อมีผู้ตอบระดับนั้นกี่เปอร์เซ็นต์</div>' + levelTable(S.qs, S.sections, q => B.item[q.id], sec => B.sec[sec], B.all) + '</div>';
     $('subjView').innerHTML = html;
+  }
+
+  /* ---------- แบบประเมินผลการฝึกอบรม (ภาพรวม) ---------- */
+  const isOther = o => /^อื่น/.test(String(o));
+  const shortPart = p => (String(p).match(/^ตอนที่\s*\S+/) || [p])[0];
+  let fxBy = null;
+  function computeFinal() {
+    const F = D.final; if (!F) return null;
+    const R = D.finalResponses || [];
+    const qs = F.questions;
+    const parts = [];
+    qs.forEach(q => { let p = parts.find(x => x.name === q.part); if (!p) parts.push(p = { name: q.part, qs: [] }); p.qs.push(q); });
+    const choice = {}, item = {}, part = {}, sec = {}, texts = {};
+    qs.forEach(q => {
+      if (q.type === 'choice') choice[q.id] = { q, count: {}, others: [], n: 0 };
+      if (q.type === 'scale') item[q.id] = acc();
+      if (q.type === 'text') texts[q.id] = [];
+    });
+    parts.forEach(p => { if (p.qs.some(q => q.type === 'scale')) { part[p.name] = acc(); p.qs.filter(q => q.type === 'scale').forEach(q => { const k = p.name + '|' + q.section; sec[k] = sec[k] || acc(); }); } });
+    const all = acc();
+    const rows = R.map(r => {
+      const cat = {}; const sc = acc();
+      qs.forEach(q => {
+        const v = r.a[q.id];
+        if (q.type === 'choice') {
+          if (v == null || v === '') return;
+          const s = String(v); const opt = q.options.find(o => s === o || (isOther(o) && isOther(s))) || s;
+          const C = choice[q.id]; C.n++; C.count[opt] = (C.count[opt] || 0) + 1; cat[q.id] = opt;
+          if (isOther(opt)) { const o = s.replace(/^[^:]*:\s*/, ''); if (o && o !== s) C.others.push(o); }
+        } else if (q.type === 'scale') {
+          const n = Number(v); if (!(n >= 1 && n <= 5)) return;
+          add(item[q.id], n); add(part[q.part], n); add(sec[q.part + '|' + q.section], n); add(all, n);
+          if (q.part === parts.find(p => p.qs.some(x => x.type === 'scale')).name) add(sc, n);
+        } else { const t = String(v || '').trim(); if (t) texts[q.id].push(t); }
+      });
+      return { cat, m: sc.n ? sc.s / sc.n : null };
+    });
+    Object.values(item).forEach(fin); Object.values(part).forEach(fin); Object.values(sec).forEach(fin); fin(all);
+    return { F, R, qs, parts, choice, item, part, sec, texts, all, rows, n: R.length };
+  }
+  function finalInsights(X) {
+    const out = [];
+    if (!X.n) return out;
+    const sp = X.parts.filter(p => X.part[p.name] && X.part[p.name].n);
+    sp.forEach(p => out.push(['📊', esc(shortPart(p.name)) + ' ' + esc(p.name.replace(/^ตอนที่\s*\S+\s*/, '')) + ': พึงพอใจร้อยละ <b>' + fp(X.part[p.name].mean) + '</b> ระดับ <b>' + level(X.part[p.name].mean).t + '</b> (x̄ = ' + f2(X.part[p.name].mean) + ')']));
+    const secs = Object.keys(X.sec).filter(k => X.sec[k].n).sort((a, b) => X.sec[b].mean - X.sec[a].mean);
+    if (secs.length >= 2) {
+      out.push(['🏆', 'ด้านที่ได้คะแนนสูงสุด: <b>' + esc(secs[0].split('|')[1]) + '</b> (' + fp(X.sec[secs[0]].mean) + ')']);
+      out.push(['🔻', 'ด้านที่ได้คะแนนต่ำสุด: <b>' + esc(secs[secs.length - 1].split('|')[1]) + '</b> (' + fp(X.sec[secs[secs.length - 1]].mean) + ')']);
+    }
+    const its = X.qs.filter(q => q.type === 'scale' && X.item[q.id].n).sort((a, b) => X.item[b.id].mean - X.item[a.id].mean);
+    if (its.length >= 2) {
+      out.push(['⭐', 'ข้อที่ได้คะแนนสูงสุด: “' + esc(its[0].text) + '” (' + fp(X.item[its[0].id].mean) + ')']);
+      out.push(['🎯', 'ข้อที่ควรพัฒนาเป็นอันดับแรก: “' + esc(its[its.length - 1].text) + '” (' + fp(X.item[its[its.length - 1].id].mean) + ')']);
+    }
+    const weak = its.filter(q => X.item[q.id].mean < 3.505);
+    if (weak.length) out.push(['⚠️', 'มี ' + weak.length + ' ข้อที่ต่ำกว่าระดับ “มาก” (&lt; 3.51): ' + esc(weak.slice(0, 3).map(q => q.text).join(', ')) + (weak.length > 3 ? ' …' : '')]);
+    else out.push(['✅', 'ทุกข้ออยู่ในระดับ “มาก” ขึ้นไป']);
+    // กลุ่มที่พึงพอใจต่างกันมากที่สุด
+    let best = null;
+    Object.values(X.choice).forEach(C => {
+      const g = {};
+      X.rows.forEach(r => { const k = r.cat[C.q.id]; if (k && r.m != null) { g[k] = g[k] || { s: 0, n: 0 }; g[k].s += r.m; g[k].n++; } });
+      const ks = Object.keys(g).filter(k => g[k].n >= 5);
+      if (ks.length < 2) return;
+      ks.sort((a, b) => g[b].s / g[b].n - g[a].s / g[a].n);
+      const d = g[ks[0]].s / g[ks[0]].n - g[ks[ks.length - 1]].s / g[ks[ks.length - 1]].n;
+      if (!best || d > best.d) best = { q: C.q, hi: ks[0], lo: ks[ks.length - 1], d, mh: g[ks[0]].s / g[ks[0]].n, ml: g[ks[ks.length - 1]].s / g[ks[ks.length - 1]].n };
+    });
+    if (best && best.d >= 0.1) out.push(['👥', 'เมื่อแยกตาม<b>' + esc(best.q.text) + '</b> กลุ่ม “' + esc(best.hi) + '” พึงพอใจสูงสุด (' + fp(best.mh) + ') ส่วน “' + esc(best.lo) + '” ต่ำสุด (' + fp(best.ml) + ')']);
+    const st = X.qs.find(q => q.type === 'choice' && /สถานภาพ/.test(q.text));
+    if (st) { const C = X.choice[st.id]; const top = Object.keys(C.count).sort((a, b) => C.count[b] - C.count[a])[0]; if (top) out.push(['🧑‍🏫', 'ผู้ตอบส่วนใหญ่เป็น “' + esc(top) + '” ร้อยละ ' + f1(C.count[top] / C.n * 100)]); }
+    const tc = Object.values(X.texts).reduce((a, b) => a + b.length, 0);
+    if (tc) out.push(['💬', 'มีข้อเสนอแนะ ' + tc + ' ข้อความ (ดูด้านล่าง)']);
+    return out;
+  }
+  let fxGroup = null;
+  function renderFinal() {
+    const X = fxBy = computeFinal();
+    const V = $('finalView');
+    if (!X) { V.innerHTML = '<div class="card box empty">ยังไม่ได้ติดตั้งแบบประเมินภาพรวม — เปิด Google Sheet › ส่วนขยาย › Apps Script › เลือกฟังก์ชัน <b>upgrade</b> แล้วกดเรียกใช้</div>'; return; }
+    const F = X.F, P = D.participants || 0;
+    const sp = X.parts.filter(p => X.part[p.name]);
+    let h = '<div class="fbar"><div><h2 style="font-size:20px">' + esc(F.title) + '</h2><div class="muted" style="font-size:14px">' + (F.open ? '<span class="tag open">กำลังเปิดรับการประเมิน</span>' : '<span class="tag">ปิดรับการประเมิน</span>') + ' · ผู้ตอบ ' + X.n + ' คน</div></div>' +
+      '<div class="acts"><button class="btn sm' + (F.open ? ' ghost' : '') + '" id="fxToggle">' + (F.open ? 'ปิดรับการประเมิน' : 'เปิดรับการประเมิน') + '</button><button class="btn ghost sm" id="fxCsv">CSV สรุปผล</button><button class="btn ghost sm" id="fxPrint">พิมพ์รายงาน</button></div></div>';
+    if (!X.n) { V.innerHTML = h + '<div class="card box empty">ยังไม่มีผู้ตอบแบบประเมินภาพรวม' + (F.open ? '' : ' — กด “เปิดรับการประเมิน” เมื่อพร้อม') + '</div>'; bindFinal(); return; }
+    const pos = posOf(X.all);
+    const p2 = sp[0] ? X.part[sp[0].name] : null, p3 = sp[1] ? X.part[sp[1].name] : null;
+    h += '<div class="card lead">ผู้เข้าอบรม <b>' + X.n + ' คน</b>' + (P ? ' (ร้อยละ ' + f1(X.n / P * 100) + ' ของผู้เข้าอบรม)' : '') + ' ประเมินการฝึกอบรมโดยรวมพึงพอใจ <span class="big">' + fp(X.all.mean) + '</span> ระดับ <b>' + level(X.all.mean).t + '</b>' +
+      (p2 ? ' · ' + esc(shortPart(sp[0].name)) + ' ' + fp(p2.mean) : '') + (p3 ? ' · ' + esc(shortPart(sp[1].name)) + ' ' + fp(p3.mean) : '') + ' · ร้อยละ <b>' + f1(pos) + '</b> ของคำตอบอยู่ในระดับ “มาก” ถึง “มากที่สุด”</div>';
+    const kp = [{ lab: 'ผู้ตอบแบบประเมิน', val: X.n, small: 'คน', foot: '<span class="muted">' + (P ? 'ร้อยละ ' + f1(X.n / P * 100) + ' จาก ' + P + ' คน' : 'ตั้งจำนวนผู้เข้าอบรมในแท็บจัดการข้อมูล') + '</span>' }];
+    sp.forEach(p => { const a = X.part[p.name]; kp.push({ lab: shortPart(p.name) + ' ' + p.name.replace(/^ตอนที่\s*\S+\s*/, ''), val: (a.mean * 20).toFixed(1), small: '%', foot: lvlTag(a.mean) + ' <span class="muted">x̄ ' + f2(a.mean) + ' · S.D. ' + f2(a.sd) + '</span>' }); });
+    kp.push({ lab: 'ระดับมาก–มากที่สุด', val: f1(pos), small: '%', foot: '<span class="muted">ของคำตอบทั้งหมด ' + X.all.n.toLocaleString() + ' คำตอบ</span>' });
+    h += '<div class="grid g4">' + kp.slice(0, 4).map(k => '<div class="card box kpi"><div class="lab">' + esc(k.lab) + '</div><div class="val">' + k.val + ' <small>' + k.small + '</small></div><div class="foot">' + k.foot + '</div></div>').join('') + '</div>';
+    // ตอนที่ 1
+    const chs = Object.values(X.choice);
+    if (chs.length) {
+      h += '<div class="card box" style="margin-top:16px"><h3>' + esc(chs[0].q.part) + '</h3><div class="hint">จำนวนและร้อยละของผู้ตอบ</div><div class="grid g3">' + chs.map(C => {
+        const max = Math.max(1, ...C.q.options.map(o => C.count[o] || 0));
+        return '<div><div style="font-weight:600;margin-bottom:4px">' + esc(C.q.text) + '</div>' + C.q.options.map(o => {
+          const c = C.count[o] || 0, pp = C.n ? c / C.n * 100 : 0;
+          return '<div class="optrow"><div>' + esc(o.replace(/\s*\(โปรดระบุ\)/, '')) + '</div><div class="track" style="height:16px"><div class="fill" style="width:' + (c / max * 100) + '%;background:var(--primary)"></div></div><div class="num"><b>' + c + '</b> · ' + f1(pp) + '%</div></div>';
+        }).join('') + (C.others.length ? '<div class="others">อื่น ๆ: ' + esc(C.others.join(', ')) + '</div>' : '') + '</div>';
+      }).join('') + '</div></div>';
+    }
+    // ข้อค้นพบ + รายด้าน
+    const secKeys = Object.keys(X.sec);
+    h += '<div class="grid g2" style="margin-top:16px"><div class="card box"><h3>ข้อค้นพบสำคัญ</h3><div class="hint">สรุปอัตโนมัติจากข้อมูลล่าสุด</div><ul class="ins">' + finalInsights(X).map(i => '<li><span class="ic">' + i[0] + '</span><span>' + i[1] + '</span></li>').join('') + '</ul></div>' +
+      '<div class="card box"><h3>ร้อยละความพึงพอใจรายด้าน</h3><div class="hint">เส้นตั้ง = ภาพรวมทั้งฉบับ</div>' +
+      hbars(secKeys.map(k => ({ name: k.split('|')[1], sub: shortPart(k.split('|')[0]), v: X.sec[k].mean, color: barColor(X.sec[k].mean), note: 'x̄ ' + f2(X.sec[k].mean) + ' · ' + level(X.sec[k].mean).t })), X.all.mean, { percent: true }) +
+      '<h3 style="margin-top:22px">การกระจายคำตอบทั้งหมด</h3><div class="hint">สัดส่วนระดับ 5 → 1</div>' + distBar(X.all.d) + legend() + '</div></div>';
+    // เปรียบเทียบตามข้อมูลผู้ตอบ
+    if (chs.length) {
+      if (!fxGroup || !X.choice[fxGroup]) fxGroup = (chs.find(C => /สถานภาพ/.test(C.q.text)) || chs[0]).q.id;
+      const C = X.choice[fxGroup], g = {};
+      X.rows.forEach(r => { const k = r.cat[fxGroup]; if (k && r.m != null) { g[k] = g[k] || { s: 0, n: 0 }; g[k].s += r.m; g[k].n++; } });
+      h += '<div class="card box" style="margin-top:16px"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start"><div><h3>เปรียบเทียบความพึงพอใจตามข้อมูลผู้ตอบ</h3><div class="hint">ร้อยละความพึงพอใจ ' + esc(sp[0] ? shortPart(sp[0].name) : '') + ' แยกตามกลุ่ม · เส้นตั้ง = ภาพรวม</div></div>' +
+        '<select id="fxGroup" style="max-width:280px">' + chs.map(c => '<option value="' + esc(c.q.id) + '"' + (c.q.id === fxGroup ? ' selected' : '') + '>แยกตาม' + esc(c.q.text) + '</option>').join('') + '</select></div>' +
+        hbars(C.q.options.filter(o => g[o]).map(o => ({ name: o.replace(/\s*\(โปรดระบุ\)/, ''), sub: g[o].n + ' คน', v: g[o].s / g[o].n, color: barColor(g[o].s / g[o].n), note: 'x̄ ' + f2(g[o].s / g[o].n) })), p2 ? p2.mean : X.all.mean, { percent: true }) +
+        '<div class="legend">กลุ่มที่มีผู้ตอบน้อยกว่า 5 คน ควรแปลผลอย่างระมัดระวัง</div></div>';
+    }
+    // ตารางรายข้อแต่ละตอน
+    sp.forEach(p => {
+      const sq = p.qs.filter(q => q.type === 'scale');
+      const sections = [...new Set(sq.map(q => q.section))];
+      const head = (F.heads || {})[shortPart(p.name)] || 'ระดับ';
+      h += '<div class="card box" style="margin-top:16px"><h3>' + esc(p.name) + '</h3><div class="hint">' + esc(head) + ' · x̄, S.D., ร้อยละความพึงพอใจ และระดับ</div><div class="scrollx"><table class="t"><tr><th>ข้อ</th><th>รายการประเมิน</th><th class="n">x̄</th><th class="n">S.D.</th><th class="n">ร้อยละ</th><th>ระดับ</th><th style="min-width:130px">การกระจาย</th></tr>';
+      sections.forEach(s => {
+        const a = X.sec[p.name + '|' + s];
+        if (sections.length > 1) h += '<tr class="sec"><td></td><td>' + esc(s) + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td class="n">' + fp(a.mean) + '</td><td>' + lvlTag(a.mean) + '</td><td></td></tr>';
+        sq.filter(q => q.section === s).forEach(q => { const b = X.item[q.id]; h += '<tr><td class="muted">' + (sq.indexOf(q) + 1) + '</td><td>' + esc(q.text) + '</td><td class="n">' + f2(b.mean) + '</td><td class="n">' + f2(b.sd) + '</td><td class="n">' + fp(b.mean) + '</td><td>' + lvlTag(b.mean) + '</td><td>' + distBar(b.d) + '</td></tr>'; });
+      });
+      const T = X.part[p.name];
+      h += '<tr class="tot"><td></td><td>รวม</td><td class="n">' + f2(T.mean) + '</td><td class="n">' + f2(T.sd) + '</td><td class="n">' + fp(T.mean) + '</td><td>' + lvlTag(T.mean) + '</td><td>' + distBar(T.d) + '</td></tr></table></div>' + legend() +
+        '<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--primary);font-weight:500">ดูร้อยละของผู้ตอบแต่ละระดับ (รายข้อ)</summary>' + levelTable(sq, sections, q => X.item[q.id], s => X.sec[p.name + '|' + s], T, q => sq.indexOf(q) + 1) + '</details></div>';
+    });
+    // ข้อเสนอแนะ
+    const tq = X.qs.filter(q => q.type === 'text');
+    if (tq.length) h += '<div class="grid g2e" style="margin-top:16px">' + tq.map(q => { const t = X.texts[q.id]; return '<div class="card box"><h3>' + esc(q.text) + ' <span class="tag">' + t.length + '</span></h3><div class="comments" style="margin-top:10px">' + (t.length ? t.slice().reverse().map(x => '<div>' + esc(x) + '</div>').join('') : '<span class="muted">ยังไม่มีข้อเสนอแนะ</span>') + '</div></div>'; }).join('') + '</div>';
+    V.innerHTML = h;
+    bindFinal();
+  }
+  function bindFinal() {
+    const tg = $('fxToggle'); if (tg) tg.onclick = () => setFinalOpen(!D.final.open);
+    const c = $('fxCsv'); if (c) c.onclick = csvFinal;
+    const pr = $('fxPrint'); if (pr) pr.onclick = () => doPrint(printFinalHtml());
+    const g = $('fxGroup'); if (g) g.onchange = () => { fxGroup = g.value; renderFinal(); };
+  }
+  async function setFinalOpen(open, input) {
+    try {
+      await call('setFinalOpen', { password: pw, open });
+      D.final.open = open;
+      toast((open ? 'เปิด' : 'ปิด') + 'รับแบบประเมินภาพรวมแล้ว');
+      renderAll();
+    } catch (e) { toast(e.message, true); if (input) input.checked = !open; }
+  }
+  function csvFinal() {
+    const X = computeFinal(); if (!X) return;
+    const rows = [[X.F.title], ['จำนวนผู้ตอบ', X.n], [], ['ตอนที่ 1', 'รายการ', 'ตัวเลือก', 'จำนวน', 'ร้อยละ']];
+    Object.values(X.choice).forEach(C => C.q.options.forEach(o => rows.push([C.q.part, C.q.text, o, C.count[o] || 0, C.n ? ((C.count[o] || 0) / C.n * 100).toFixed(2) : ''])));
+    rows.push([], ['ตอน', 'ด้าน', 'ข้อ', 'รายการ', 'n', 'x̄', 'S.D.', 'ร้อยละความพึงพอใจ', 'ระดับ', '% ตอบ 5', '% ตอบ 4', '% ตอบ 3', '% ตอบ 2', '% ตอบ 1']);
+    X.parts.filter(p => X.part[p.name]).forEach(p => {
+      const sq = p.qs.filter(q => q.type === 'scale');
+      [...new Set(sq.map(q => q.section))].forEach(s => {
+        const a = X.sec[p.name + '|' + s];
+        rows.push([p.name, s, '', 'รวมด้าน', a.n, n2(a.mean), n2(a.sd), a.mean == null ? '' : (a.mean * 20).toFixed(2), level(a.mean).t]);
+        sq.filter(q => q.section === s).forEach(q => { const b = X.item[q.id]; const pp = k => b.n ? (b.d[k] / b.n * 100).toFixed(2) : ''; rows.push([p.name, s, sq.indexOf(q) + 1, q.text, b.n, n2(b.mean), n2(b.sd), b.mean == null ? '' : (b.mean * 20).toFixed(2), level(b.mean).t, pp(4), pp(3), pp(2), pp(1), pp(0)]); });
+      });
+      const T = X.part[p.name]; rows.push([p.name, '', '', 'รวมทั้งตอน', T.n, n2(T.mean), n2(T.sd), (T.mean * 20).toFixed(2), level(T.mean).t]);
+    });
+    rows.push([], ['ข้อเสนอแนะ']);
+    X.qs.filter(q => q.type === 'text').forEach(q => X.texts[q.id].forEach(t => rows.push([q.text, t])));
+    csv(rows, 'สรุปแบบประเมินภาพรวม.csv');
+  }
+  function csvFinalRaw() {
+    const F = D.final; if (!F) return;
+    csv([['เวลา'].concat(F.questions.map(q => q.id + ' ' + q.text))].concat((D.finalResponses || []).map(r => [new Date(r.t).toLocaleString('th-TH')].concat(F.questions.map(q => r.a[q.id] ?? '')))), 'ข้อมูลดิบแบบประเมินภาพรวม.csv');
+  }
+  function printFinalHtml() {
+    const X = computeFinal(); if (!X) return '';
+    let h = headerHtml('ผลการ' + X.F.title.replace(/^แบบ/, '')) + '<p>จำนวนผู้ตอบแบบประเมิน ' + X.n + ' คน' + (D.participants ? ' (ร้อยละ ' + f1(X.n / D.participants * 100) + ' ของผู้เข้าอบรม ' + D.participants + ' คน)' : '') + '</p>';
+    const chs = Object.values(X.choice);
+    if (chs.length) {
+      h += '<p><b>' + esc(chs[0].q.part) + '</b></p><table><tr><th>ข้อมูล</th><th style="width:80px">จำนวน</th><th style="width:80px">ร้อยละ</th></tr>';
+      chs.forEach((C, i) => { h += '<tr><td><b>' + (i + 1) + '. ' + esc(C.q.text) + '</b></td><td></td><td></td></tr>' + C.q.options.map(o => '<tr><td style="padding-left:24px">' + esc(o.replace(/\s*\(โปรดระบุ\)/, '')) + '</td><td class="n">' + (C.count[o] || 0) + '</td><td class="n">' + (C.n ? ((C.count[o] || 0) / C.n * 100).toFixed(2) : '–') + '</td></tr>').join('') + '<tr><td style="padding-left:24px">รวม</td><td class="n">' + C.n + '</td><td class="n">100.00</td></tr>'; });
+      h += '</table>';
+    }
+    X.parts.filter(p => X.part[p.name]).forEach(p => {
+      const sq = p.qs.filter(q => q.type === 'scale');
+      h += '<p><b>' + esc(p.name) + '</b></p><table><tr><th style="width:36px">ที่</th><th>รายการประเมิน</th><th style="width:56px">x̄</th><th style="width:56px">S.D.</th><th style="width:66px">ร้อยละ</th><th style="width:86px">ระดับ</th></tr>';
+      [...new Set(sq.map(q => q.section))].forEach(s => {
+        const a = X.sec[p.name + '|' + s];
+        h += '<tr><td></td><td><b>' + esc(s) + '</b></td><td class="n"><b>' + f2(a.mean) + '</b></td><td class="n"><b>' + f2(a.sd) + '</b></td><td class="n"><b>' + fp(a.mean) + '</b></td><td class="n"><b>' + level(a.mean).t + '</b></td></tr>';
+        sq.filter(q => q.section === s).forEach(q => { const b = X.item[q.id]; h += '<tr><td class="n">' + (sq.indexOf(q) + 1) + '</td><td>' + esc(q.text) + '</td><td class="n">' + f2(b.mean) + '</td><td class="n">' + f2(b.sd) + '</td><td class="n">' + fp(b.mean) + '</td><td class="n">' + level(b.mean).t + '</td></tr>'; });
+      });
+      const T = X.part[p.name];
+      h += '<tr><th></th><th>รวม</th><th>' + f2(T.mean) + '</th><th>' + f2(T.sd) + '</th><th>' + fp(T.mean) + '</th><th>' + level(T.mean).t + '</th></tr></table>';
+    });
+    const ins = finalInsights(X);
+    if (ins.length) h += '<p><b>สรุปผล</b></p><ol>' + ins.map(i => '<li>' + i[1] + '</li>').join('') + '</ol>';
+    X.qs.filter(q => q.type === 'text').forEach(q => { const t = X.texts[q.id]; if (t.length) h += '<p><b>' + esc(q.text) + '</b></p><ul>' + t.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>'; });
+    return h;
   }
 
   /* ---------- เปิด-ปิด ---------- */
@@ -601,6 +887,10 @@
     D.subjects.forEach(s => { let g = byDay.find(d => d.day === s.day); if (!g) byDay.push(g = { day: s.day, items: [] }); g.items.push(s); });
     $('ctlList').innerHTML = byDay.map(g => '<div class="dayhead"><h4>' + esc(g.day || 'ไม่ระบุวัน') + '</h4><div style="display:flex;gap:6px"><button class="btn ghost sm" data-day="' + esc(g.day) + '" data-o="1">เปิดทั้งวัน</button><button class="btn ghost sm" data-day="' + esc(g.day) + '" data-o="0">ปิดทั้งวัน</button></div></div>' +
       g.items.map(s => '<div class="ctl"><div><div class="nm">' + esc(s.name) + '</div><div class="meta">' + esc([s.time, s.instructor].filter(Boolean).join(' · ')) + ' · ตอบแล้ว ' + S.bySubj[s.id].resp + ' คน</div></div><label class="switch"><input type="checkbox" data-id="' + esc(s.id) + '"' + (s.open ? ' checked' : '') + '><span></span></label></div>').join('')).join('');
+    if (D.final) {
+      $('ctlList').insertAdjacentHTML('afterbegin', '<div class="ctl fin"><div><div class="nm">★ ' + esc(D.final.title) + ' (ภาพรวม)</div><div class="meta">เปิดในวันสุดท้ายหลังจบการอบรม · ตอบแล้ว ' + (D.finalResponses || []).length + ' คน</div></div><label class="switch"><input type="checkbox" id="finSw"' + (D.final.open ? ' checked' : '') + '><span></span></label></div>');
+      $('finSw').onchange = () => setFinalOpen($('finSw').checked, $('finSw'));
+    }
     $('ctlList').querySelectorAll('input[data-id]').forEach(i => i.onchange = () => setOpen([i.dataset.id], i.checked, i));
     $('ctlList').querySelectorAll('button[data-day]').forEach(b => b.onclick = () => setOpen(D.subjects.filter(s => s.day === b.dataset.day).map(s => s.id), b.dataset.o === '1'));
     $('codeShow').textContent = D.accessCode || '';
@@ -637,13 +927,14 @@
   }
   const n2 = x => x == null ? '' : x.toFixed(2);
   function csvSum() {
-    const head = ['ลำดับ', 'วัน', 'เวลา', 'วิชา', 'วิทยากร', 'จำนวนผู้ตอบ', 'x̄', 'S.D.', 'ระดับ'].concat(S.sections.map(s => s + ' (x̄)'));
-    csv([head].concat(D.subjects.map((s, i) => { const B = S.bySubj[s.id]; return [i + 1, s.day, s.time, s.name, s.instructor, B.resp, n2(B.all.mean), n2(B.all.sd), level(B.all.mean).t].concat(S.sections.map(x => n2(B.sec[x].mean))); }))
-      .concat([['', '', '', 'รวมทุกวิชา', '', S.totalResp, n2(S.all.mean), n2(S.all.sd), level(S.all.mean).t].concat(S.sections.map(x => n2(S.bySec[x].mean)))]), 'สรุปผลรายวิชา.csv');
+    const pc = m => m == null ? '' : (m * 20).toFixed(2);
+    const head = ['ลำดับ', 'วัน', 'เวลา', 'วิชา', 'วิทยากร', 'จำนวนผู้ตอบ', 'x̄', 'S.D.', 'ร้อยละความพึงพอใจ', 'ระดับ', 'ร้อยละตอบมาก–มากที่สุด'].concat(S.sections.map(s => s + ' (x̄)'), S.sections.map(s => s + ' (ร้อยละ)'));
+    csv([head].concat(D.subjects.map((s, i) => { const B = S.bySubj[s.id]; return [i + 1, s.day, s.time, s.name, s.instructor, B.resp, n2(B.all.mean), n2(B.all.sd), pc(B.all.mean), level(B.all.mean).t, n2(posOf(B.all))].concat(S.sections.map(x => n2(B.sec[x].mean)), S.sections.map(x => pc(B.sec[x].mean))); }))
+      .concat([['', '', '', 'รวมทุกวิชา', '', S.totalResp, n2(S.all.mean), n2(S.all.sd), pc(S.all.mean), level(S.all.mean).t, n2(posOf(S.all))].concat(S.sections.map(x => n2(S.bySec[x].mean)), S.sections.map(x => pc(S.bySec[x].mean)))]), 'สรุปผลรายวิชา.csv');
   }
   function csvItem() {
-    const rows = [['วิชา', 'วิทยากร', 'ข้อ', 'ด้าน', 'รายการ', 'n', 'x̄', 'S.D.', 'ระดับ', 'ตอบ 5', 'ตอบ 4', 'ตอบ 3', 'ตอบ 2', 'ตอบ 1']];
-    D.subjects.forEach(s => { const B = S.bySubj[s.id]; S.qs.forEach((q, i) => { const a = B.item[q.id]; rows.push([s.name, s.instructor, i + 1, q.section, q.text, a.n, n2(a.mean), n2(a.sd), level(a.mean).t, a.d[4], a.d[3], a.d[2], a.d[1], a.d[0]]); }); });
+    const rows = [['วิชา', 'วิทยากร', 'ข้อ', 'ด้าน', 'รายการ', 'n', 'x̄', 'S.D.', 'ร้อยละความพึงพอใจ', 'ระดับ', 'ตอบ 5', 'ตอบ 4', 'ตอบ 3', 'ตอบ 2', 'ตอบ 1', '% ตอบ 5', '% ตอบ 4', '% ตอบ 3', '% ตอบ 2', '% ตอบ 1']];
+    D.subjects.forEach(s => { const B = S.bySubj[s.id]; S.qs.forEach((q, i) => { const a = B.item[q.id]; const pp = k => a.n ? (a.d[k] / a.n * 100).toFixed(2) : ''; rows.push([s.name, s.instructor, i + 1, q.section, q.text, a.n, n2(a.mean), n2(a.sd), a.mean == null ? '' : (a.mean * 20).toFixed(2), level(a.mean).t, a.d[4], a.d[3], a.d[2], a.d[1], a.d[0], pp(4), pp(3), pp(2), pp(1), pp(0)]); }); });
     csv(rows, 'สรุปรายข้อ.csv');
   }
   function csvRaw() {
@@ -661,10 +952,10 @@
     return '<h2>' + esc(title) + '</h2><div class="c">' + esc(D.event.subtitle || '') + '</div><div class="c">' + esc(D.event.detail || '') + '</div>';
   }
   function printOverviewHtml() {
-    let h = headerHtml('สรุปผลการประเมินรายวิชา (ภาพรวม)') + '<table><tr><th>ที่</th><th>วิชา</th><th>วิทยากร</th><th>n</th><th>x̄</th><th>S.D.</th><th>ระดับ</th></tr>';
-    D.subjects.forEach((s, i) => { const B = S.bySubj[s.id]; h += '<tr><td class="n">' + (i + 1) + '</td><td>' + esc(s.name) + '</td><td>' + esc(s.instructor || '') + '</td><td class="n">' + B.resp + '</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td class="n">' + level(B.all.mean).t + '</td></tr>'; });
-    h += '<tr><th colspan="3">รวมทุกวิชา</th><th>' + S.totalResp + '</th><th>' + f2(S.all.mean) + '</th><th>' + f2(S.all.sd) + '</th><th>' + level(S.all.mean).t + '</th></tr></table>';
-    h += '<table><tr><th>ด้าน</th><th>x̄</th><th>S.D.</th><th>ระดับ</th></tr>' + S.sections.map(x => '<tr><td>' + esc(x) + '</td><td class="n">' + f2(S.bySec[x].mean) + '</td><td class="n">' + f2(S.bySec[x].sd) + '</td><td class="n">' + level(S.bySec[x].mean).t + '</td></tr>').join('') + '</table>';
+    let h = headerHtml('สรุปผลการประเมินรายวิชา (ภาพรวม)') + '<table><tr><th>ที่</th><th>วิชา</th><th>วิทยากร</th><th>n</th><th>x̄</th><th>S.D.</th><th>ร้อยละ</th><th>ระดับ</th></tr>';
+    D.subjects.forEach((s, i) => { const B = S.bySubj[s.id]; h += '<tr><td class="n">' + (i + 1) + '</td><td>' + esc(s.name) + '</td><td>' + esc(s.instructor || '') + '</td><td class="n">' + B.resp + '</td><td class="n">' + f2(B.all.mean) + '</td><td class="n">' + f2(B.all.sd) + '</td><td class="n">' + fp(B.all.mean) + '</td><td class="n">' + level(B.all.mean).t + '</td></tr>'; });
+    h += '<tr><th colspan="3">รวมทุกวิชา</th><th>' + S.totalResp + '</th><th>' + f2(S.all.mean) + '</th><th>' + f2(S.all.sd) + '</th><th>' + fp(S.all.mean) + '</th><th>' + level(S.all.mean).t + '</th></tr></table>';
+    h += '<table><tr><th>ด้าน</th><th>x̄</th><th>S.D.</th><th>ร้อยละ</th><th>ระดับ</th></tr>' + S.sections.map(x => '<tr><td>' + esc(x) + '</td><td class="n">' + f2(S.bySec[x].mean) + '</td><td class="n">' + f2(S.bySec[x].sd) + '</td><td class="n">' + fp(S.bySec[x].mean) + '</td><td class="n">' + level(S.bySec[x].mean).t + '</td></tr>').join('') + '</table>';
     const ins = insights();
     if (ins.length) h += '<p><b>ข้อค้นพบ</b></p><ol>' + ins.map(i => '<li>' + i[1] + '</li>').join('') + '</ol>';
     return h;
@@ -672,12 +963,12 @@
   function printSubjectHtml(id) {
     const B = S.bySubj[id], s = B.subj;
     let h = headerHtml('ผลการประเมินรายวิชา') + '<p><b>วิชา</b> ' + esc(s.name) + ' &nbsp; <b>วิทยากร</b> ' + esc(s.instructor || '-') + '<br><b>วัน/เวลา</b> ' + esc([s.day, s.time].filter(Boolean).join(' ')) + ' &nbsp; <b>จำนวนผู้ตอบ</b> ' + B.resp + ' คน</p>';
-    h += '<table><tr><th style="width:36px">ที่</th><th>รายการประเมิน</th><th style="width:60px">x̄</th><th style="width:60px">S.D.</th><th style="width:90px">ระดับ</th></tr>';
+    h += '<table><tr><th style="width:36px">ที่</th><th>รายการประเมิน</th><th style="width:60px">x̄</th><th style="width:60px">S.D.</th><th style="width:70px">ร้อยละ</th><th style="width:90px">ระดับ</th></tr>';
     S.sections.forEach(sec => {
-      h += '<tr><td></td><td><b>' + esc(sec) + '</b></td><td class="n"><b>' + f2(B.sec[sec].mean) + '</b></td><td class="n"><b>' + f2(B.sec[sec].sd) + '</b></td><td class="n"><b>' + level(B.sec[sec].mean).t + '</b></td></tr>';
-      S.qs.filter(q => q.section === sec).forEach(q => { const a = B.item[q.id]; h += '<tr><td class="n">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td class="n">' + level(a.mean).t + '</td></tr>'; });
+      h += '<tr><td></td><td><b>' + esc(sec) + '</b></td><td class="n"><b>' + f2(B.sec[sec].mean) + '</b></td><td class="n"><b>' + f2(B.sec[sec].sd) + '</b></td><td class="n"><b>' + fp(B.sec[sec].mean) + '</b></td><td class="n"><b>' + level(B.sec[sec].mean).t + '</b></td></tr>';
+      S.qs.filter(q => q.section === sec).forEach(q => { const a = B.item[q.id]; h += '<tr><td class="n">' + (S.qs.indexOf(q) + 1) + '</td><td>' + esc(q.text) + '</td><td class="n">' + f2(a.mean) + '</td><td class="n">' + f2(a.sd) + '</td><td class="n">' + fp(a.mean) + '</td><td class="n">' + level(a.mean).t + '</td></tr>'; });
     });
-    h += '<tr><th></th><th>รวม</th><th>' + f2(B.all.mean) + '</th><th>' + f2(B.all.sd) + '</th><th>' + level(B.all.mean).t + '</th></tr></table>';
+    h += '<tr><th></th><th>รวม</th><th>' + f2(B.all.mean) + '</th><th>' + f2(B.all.sd) + '</th><th>' + fp(B.all.mean) + '</th><th>' + level(B.all.mean).t + '</th></tr></table>';
     D.questions.filter(q => q.type === 'text').forEach(q => { const t = B.texts[q.id] || []; if (t.length) h += '<p><b>' + esc(q.text) + '</b></p><ul>' + t.map(x => '<li>' + esc(x.t) + '</li>').join('') + '</ul>'; });
     return h;
   }
@@ -685,10 +976,12 @@
 
   /* ---------- จัดการข้อมูล ---------- */
   let mg = null, mgDirty = false, cfgDirty = false;
-  const CFG = [['cfgTitle', 'eventTitle'], ['cfgSub', 'eventSubtitle'], ['cfgDetail', 'eventDetail'], ['cfgInstr', 'instructions'], ['cfgThanks', 'thankYou'], ['cfgCode', 'accessCode'], ['cfgPart', 'participants']];
+  const CFG = [['cfgTitle', 'eventTitle'], ['cfgSub', 'eventSubtitle'], ['cfgDetail', 'eventDetail'], ['cfgInstr', 'instructions'], ['cfgThanks', 'thankYou'], ['cfgCode', 'accessCode'], ['cfgPart', 'participants'], ['cfgFTitle', 'finalTitle'], ['cfgFInstr', 'finalInstructions']];
   function cfgValue(k) {
     if (k === 'accessCode') return D.accessCode || '';
     if (k === 'participants') return D.participants || '';
+    if (k === 'finalTitle') return D.final ? D.final.title : '';
+    if (k === 'finalInstructions') return D.final ? D.final.instructions : '';
     return D.event[{ eventTitle: 'title', eventSubtitle: 'subtitle', eventDetail: 'detail', instructions: 'instructions', thankYou: 'thankYou' }[k]] || '';
   }
   function setStatus(el, dirty) { el.textContent = dirty ? 'ยังไม่บันทึก' : 'บันทึกแล้ว'; el.classList.toggle('dirty', dirty); }
@@ -766,7 +1059,7 @@
   /* ---------- โครงหลัก ---------- */
   function switchTab(t) {
     document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-    ['overview', 'subject', 'control', 'manage', 'export'].forEach(x => $('t' + x[0].toUpperCase() + x.slice(1)).classList.toggle('hidden', x !== t));
+    ['overview', 'subject', 'final', 'control', 'manage', 'export'].forEach(x => $('t' + x[0].toUpperCase() + x.slice(1)).classList.toggle('hidden', x !== t));
     renderAll(); window.scrollTo(0, 0);
   }
   function activeTab() { return document.querySelector('#tabs button.on').dataset.t; }
@@ -778,6 +1071,7 @@
     const t = activeTab();
     if (t === 'overview') renderOverview();
     if (t === 'subject') renderSubject();
+    if (t === 'final') renderFinal();
     if (t === 'control') renderControl();
     if (t === 'manage') renderManage(false);
   }
@@ -820,6 +1114,8 @@
   $('printS').onclick = () => curSubj && doPrint(printSubjectHtml(curSubj));
   $('printOverview').onclick = () => doPrint(printOverviewHtml());
   $('printAll').onclick = () => doPrint('<div class="pb">' + printOverviewHtml() + '</div>' + D.subjects.filter(s => S.bySubj[s.id].resp).map(s => '<div class="pb">' + printSubjectHtml(s.id) + '</div>').join(''));
+  $('csvFinal').onclick = csvFinal; $('csvFinalRaw').onclick = csvFinalRaw;
+  $('printFinal').onclick = () => doPrint(printFinalHtml());
   $('csvSum').onclick = csvSum; $('csvItem').onclick = csvItem; $('csvRaw').onclick = csvRaw; $('csvText').onclick = csvText;
   $('allOn').onclick = () => setOpen(D.subjects.map(s => s.id), true);
   $('allOff').onclick = () => setOpen(D.subjects.map(s => s.id), false);
